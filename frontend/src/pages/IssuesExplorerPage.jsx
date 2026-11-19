@@ -1,27 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Search, 
   Filter, 
-  ArrowUpDown, 
   AlertTriangle, 
   FileCode, 
   Copy, 
   Check, 
-  ExternalLink,
-  ChevronDown,
-  ChevronUp
+  ChevronDown, 
+  ChevronUp,
+  Hash,
+  Wrench,
+  ArrowRight
 } from 'lucide-react';
 
-export default function IssuesExplorerPage({ issues = [], activeDataset, initialCategory = 'all', initialSeverity = 'all' }) {
+const CATEGORIES = [
+  { id: 'all', label: 'All Issues' },
+  { id: 'Missing Values', label: 'Missing Values' },
+  { id: 'Duplicate Records', label: 'Duplicates' },
+  { id: 'Numerical Outliers & Impossible Values', label: 'Outliers & Math' },
+  { id: 'Inconsistent Values', label: 'Inconsistencies' },
+];
+
+export default function IssuesExplorerPage({ 
+  issues = [], 
+  activeDataset, 
+  initialCategory = 'all', 
+  initialSeverity = 'all',
+  onNavigate 
+}) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(initialCategory || 'all');
   const [selectedSeverity, setSelectedSeverity] = useState(initialSeverity || 'all');
-  const [sortBy, setSortBy] = useState('count_desc');
   const [expandedId, setExpandedId] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
   const [copiedRowsId, setCopiedRowsId] = useState(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (initialCategory) setSelectedCategory(initialCategory);
     if (initialSeverity) setSelectedSeverity(initialSeverity);
   }, [initialCategory, initialSeverity]);
@@ -36,21 +50,19 @@ export default function IssuesExplorerPage({ issues = [], activeDataset, initial
     return matchesSearch && matchesCategory && matchesSeverity;
   });
 
-  // Sort issues
-  const sorted = [...filtered].sort((a, b) => {
-    if (sortBy === 'count_desc') return b.issue_count - a.issue_count;
-    if (sortBy === 'count_asc') return a.issue_count - b.issue_count;
-    if (sortBy === 'severity') {
-      const order = { 'Critical': 1, 'High': 2, 'Medium': 3, 'Low': 4 };
-      return (order[a.severity] || 5) - (order[b.severity] || 5);
-    }
-    return 0;
-  });
+  const totalAnomalies = filtered.reduce((acc, i) => acc + (i.issue_count || 1), 0);
 
   const copyCode = (id, code) => {
     navigator.clipboard.writeText(code);
     setCopiedId(id);
     setTimeout(() => setCopiedId(null), 2000);
+  };
+
+  const copyRows = (id, rows) => {
+    if (!rows || rows.length === 0) return;
+    navigator.clipboard.writeText(rows.join(', '));
+    setCopiedRowsId(id);
+    setTimeout(() => setCopiedRowsId(null), 2000);
   };
 
   const getSeverityBadge = (sev) => {
@@ -69,228 +81,240 @@ export default function IssuesExplorerPage({ issues = [], activeDataset, initial
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-black text-slate-900 dark:text-white">Issues Explorer</h1>
-        <p className="text-xs text-slate-500 mt-1">
-          Search, filter, and inspect verified data quality defects across {activeDataset?.filename || 'dataset'}.
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-black text-slate-900 dark:text-white">Detected Issues & Anomalies</h1>
+          <p className="text-xs text-slate-500 mt-1">
+            Inspecting {issues.length} detected defect patterns across {activeDataset?.filename || 'dataset'}.
+          </p>
+        </div>
+        {onNavigate && (
+          <button
+            onClick={() => onNavigate('cleaning')}
+            className="inline-flex items-center gap-1.5 rounded-xl bg-brand-600 px-4 py-2 text-xs font-bold text-white shadow-md shadow-brand-500/25 hover:bg-brand-500 transition-all shrink-0"
+          >
+            <Wrench className="h-3.5 w-3.5" />
+            <span>Open Cleaning Pipeline</span>
+          </button>
+        )}
+      </div>
+
+      {/* Category Tabs */}
+      <div className="flex flex-wrap items-center gap-2">
+        {CATEGORIES.map(cat => {
+          const count = cat.id === 'all' 
+            ? issues.length 
+            : issues.filter(i => i.category === cat.id).length;
+          const isSelected = selectedCategory === cat.id;
+
+          return (
+            <button
+              key={cat.id}
+              onClick={() => setSelectedCategory(cat.id)}
+              className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-2 ${
+                isSelected
+                  ? 'bg-brand-600 text-white shadow-sm shadow-brand-500/25'
+                  : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50 dark:bg-slate-900 dark:border-slate-800 dark:text-slate-400 dark:hover:bg-slate-800'
+              }`}
+            >
+              <span>{cat.label}</span>
+              <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
+                isSelected ? 'bg-white/20 text-white' : 'bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400'
+              }`}>
+                {count}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       {/* Filter and Search Bar */}
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 rounded-2xl border border-slate-200/80 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-        {/* Search */}
-        <div className="relative">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 rounded-2xl border border-slate-200/80 bg-white p-3 shadow-xs dark:border-slate-800 dark:bg-slate-900">
+        <div className="relative w-full sm:w-80">
+          <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-slate-400" />
           <input
             type="text"
-            placeholder="Search column or keyword..."
+            placeholder="Search column or issue description..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full rounded-xl border border-slate-200 bg-slate-50 py-2 pl-9 pr-3 text-xs text-slate-900 placeholder-slate-400 focus:border-brand-500 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
+            className="w-full rounded-xl border border-slate-200 bg-slate-50 py-1.5 pl-9 pr-3 text-xs text-slate-900 placeholder-slate-400 focus:border-brand-500 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-100"
           />
         </div>
 
-        {/* Category */}
-        <select
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-          className="rounded-xl border border-slate-200 bg-slate-50 py-2 px-3 text-xs font-semibold text-slate-700 focus:border-brand-500 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
-        >
-          <option value="all">All Categories</option>
-          <option value="Missing Values">Missing Values</option>
-          <option value="Duplicate Records">Duplicate Records</option>
-          <option value="Numerical Outliers & Impossible Values">Outliers & Impossible</option>
-          <option value="Inconsistent Values">Inconsistent Values</option>
-        </select>
-
-        {/* Severity */}
-        <select
-          value={selectedSeverity}
-          onChange={(e) => setSelectedSeverity(e.target.value)}
-          className="rounded-xl border border-slate-200 bg-slate-50 py-2 px-3 text-xs font-semibold text-slate-700 focus:border-brand-500 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
-        >
-          <option value="all">All Severities</option>
-          <option value="Critical">Critical</option>
-          <option value="High">High</option>
-          <option value="Medium">Medium</option>
-          <option value="Low">Low</option>
-        </select>
-
-        {/* Sort */}
-        <select
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value)}
-          className="rounded-xl border border-slate-200 bg-slate-50 py-2 px-3 text-xs font-semibold text-slate-700 focus:border-brand-500 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
-        >
-          <option value="count_desc">Sort: Affected Count (High → Low)</option>
-          <option value="count_asc">Sort: Affected Count (Low → High)</option>
-          <option value="severity">Sort: Severity Hierarchy</option>
-        </select>
+        <div className="flex items-center gap-3 w-full sm:w-auto">
+          <div className="flex items-center gap-1.5 text-xs text-slate-500">
+            <span>Severity:</span>
+            <select
+              value={selectedSeverity}
+              onChange={(e) => setSelectedSeverity(e.target.value)}
+              className="rounded-lg border border-slate-200 bg-slate-50 py-1 px-2.5 text-xs font-semibold text-slate-700 focus:border-brand-500 focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
+            >
+              <option value="all">All Severities</option>
+              <option value="Critical">Critical</option>
+              <option value="High">High</option>
+              <option value="Medium">Medium</option>
+              <option value="Low">Low</option>
+            </select>
+          </div>
+          <span className="text-xs text-slate-400">
+            {filtered.length} issues ({totalAnomalies} occurrences)
+          </span>
+        </div>
       </div>
 
-      {/* Issues Table */}
-      <div className="rounded-2xl border border-slate-200/80 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900 overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-slate-50 dark:bg-slate-800/60 text-slate-500 font-semibold border-b border-slate-200 dark:border-slate-800">
-              <tr>
-                <th className="py-3 px-4">Column</th>
-                <th className="py-3 px-4">Category</th>
-                <th className="py-3 px-4">Severity</th>
-                <th className="py-3 px-4">Affected Count</th>
-                <th className="py-3 px-4">Explanation</th>
-                <th className="py-3 px-4 text-right">Details</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
-              {sorted.length > 0 ? (
-                sorted.map((issue) => {
-                  const isExp = expandedId === issue.id;
-                  return (
-                    <React.Fragment key={issue.id}>
-                      <tr 
-                        onClick={() => setExpandedId(isExp ? null : issue.id)}
-                        className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40 cursor-pointer transition-colors"
+      {/* Issues List */}
+      <div className="space-y-4">
+        {filtered.length > 0 ? (
+          filtered.map((issue) => {
+            const isExpanded = expandedId === issue.id;
+            const rows = issue.affected_rows || [];
+
+            return (
+              <div
+                key={issue.id}
+                className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs dark:border-slate-800 dark:bg-slate-900 space-y-3.5 transition-all"
+              >
+                {/* Header row */}
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 dark:border-slate-800 pb-3">
+                  <div className="flex items-center gap-2.5">
+                    <span className="font-mono text-sm font-bold text-slate-900 dark:text-white bg-slate-100 dark:bg-slate-800 px-2.5 py-0.5 rounded-lg border border-slate-200/60 dark:border-slate-700">
+                      {issue.column_name}
+                    </span>
+                    <span className={`rounded-full border px-2.5 py-0.5 text-[10px] font-bold ${getSeverityBadge(issue.severity)}`}>
+                      {issue.severity}
+                    </span>
+                    <span className="text-xs font-semibold text-slate-500">
+                      {issue.category}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs font-bold text-amber-600 dark:text-amber-400">
+                      {issue.issue_count} affected records
+                    </span>
+                    <button
+                      onClick={() => setExpandedId(isExpanded ? null : issue.id)}
+                      className="p-1 rounded-lg text-slate-400 hover:text-slate-700 dark:hover:text-slate-200"
+                    >
+                      {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                    </button>
+                  </div>
+                </div>
+
+                {/* Explanation & Recommendation */}
+                <div className="grid md:grid-cols-2 gap-3 text-xs">
+                  <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
+                    <span className="font-bold text-slate-700 dark:text-slate-300 block mb-0.5">Problem Details</span>
+                    <p className="text-slate-600 dark:text-slate-400 leading-relaxed">{issue.explanation}</p>
+                  </div>
+                  <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
+                    <span className="font-bold text-slate-700 dark:text-slate-300 block mb-0.5">Recommended Fix</span>
+                    <p className="text-slate-600 dark:text-slate-400 leading-relaxed">{issue.recommendation}</p>
+                  </div>
+                </div>
+
+                {/* Sample Original Values */}
+                {issue.original_values && issue.original_values.length > 0 && (
+                  <div>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
+                      Sample Values Detected:
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {issue.original_values.map((v, i) => (
+                        <span 
+                          key={i}
+                          className="px-2 py-0.5 rounded-md bg-amber-50 border border-amber-200/70 text-amber-800 font-mono text-[11px] dark:bg-amber-950/40 dark:border-amber-800 dark:text-amber-300"
+                        >
+                          {v === '' ? '"" (empty string)' : String(v)}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Affected Excel Rows & Code (Visible when expanded or always compact) */}
+                {rows.length > 0 && (
+                  <div className="pt-1">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
+                        <Hash className="h-3 w-3 text-brand-500" />
+                        <span>Affected Excel Row Numbers ({rows.length} total):</span>
+                      </span>
+                      <button
+                        onClick={() => copyRows(issue.id, rows)}
+                        className="text-[11px] font-semibold text-brand-600 hover:text-brand-700 dark:text-brand-400 flex items-center gap-1"
                       >
-                        <td className="py-3 px-4 font-bold text-slate-900 dark:text-white">
-                          {issue.column_name}
-                        </td>
-                        <td className="py-3 px-4">
-                          <span className="text-slate-600 dark:text-slate-400 font-medium">
-                            {issue.category}
-                          </span>
-                        </td>
-                        <td className="py-3 px-4">
-                          <span className={`rounded-full border px-2 py-0.5 text-[10px] font-bold ${getSeverityBadge(issue.severity)}`}>
-                            {issue.severity}
-                          </span>
-                        </td>
-                        <td className="py-3 px-4 font-bold text-slate-900 dark:text-white">
-                          {issue.issue_count} rows
-                        </td>
-                        <td className="py-3 px-4 max-w-md truncate text-slate-500" title={issue.explanation}>
-                          {issue.explanation}
-                        </td>
-                        <td className="py-3 px-4 text-right">
-                          <button className="text-xs font-semibold text-brand-600 dark:text-brand-400">
-                            {isExp ? 'Hide' : 'Expand'}
-                          </button>
-                        </td>
-                      </tr>
-
-                      {/* Expandable row details */}
-                      {isExp && (
-                        <tr className="bg-slate-50/80 dark:bg-slate-800/40">
-                          <td colSpan={6} className="p-4 space-y-4">
-                            {/* Affected Row Numbers Section */}
-                            {issue.affected_rows && issue.affected_rows.length > 0 && (
-                              <div className="rounded-xl border border-slate-200 bg-white p-3.5 dark:border-slate-700 dark:bg-slate-900">
-                                <div className="flex items-center justify-between mb-2">
-                                  <div className="flex items-center gap-2">
-                                    <span className="text-[11px] font-bold text-slate-800 dark:text-slate-200">
-                                      Affected Excel Row Numbers ({issue.issue_count} rows total):
-                                    </span>
-                                  </div>
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      navigator.clipboard.writeText(issue.affected_rows.join(', '));
-                                      setCopiedRowsId(issue.id);
-                                      setTimeout(() => setCopiedRowsId(null), 2000);
-                                    }}
-                                    className="text-[10px] font-semibold text-brand-600 hover:text-brand-700 dark:text-brand-400"
-                                  >
-                                    {copiedRowsId === issue.id ? 'Copied Rows!' : 'Copy Row Numbers'}
-                                  </button>
-                                </div>
-                                <div className="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto p-1">
-                                  {issue.affected_rows.map((rowNum, rIdx) => (
-                                    <span
-                                      key={rIdx}
-                                      className="inline-flex items-center rounded-md bg-slate-100 px-2 py-0.5 font-mono text-[11px] font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700"
-                                    >
-                                      Row #{rowNum}
-                                    </span>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-
-                            {/* Sample Anomalies vs Recommended Values */}
-                            {issue.original_values && issue.original_values.length > 0 && (
-                              <div className="rounded-xl border border-amber-200 bg-amber-50/50 p-3.5 dark:border-amber-900/40 dark:bg-amber-950/20">
-                                <span className="text-[11px] font-bold text-amber-900 dark:text-amber-300 block mb-1.5">
-                                  Sample Detected Problematic Values:
-                                </span>
-                                <div className="flex flex-wrap gap-2">
-                                  {issue.original_values.map((val, vIdx) => (
-                                    <span
-                                      key={vIdx}
-                                      className="rounded bg-white/80 px-2 py-1 text-xs font-mono text-amber-900 border border-amber-200 dark:bg-slate-900 dark:text-amber-300 dark:border-amber-800"
-                                    >
-                                      {String(val)}
-                                    </span>
-                                  ))}
-                                </div>
-                              </div>
-                            )}
-
-                            <div className="grid md:grid-cols-2 gap-3 text-xs">
-                              <div>
-                                <span className="font-bold text-slate-700 dark:text-slate-300 uppercase text-[10px] block mb-1">
-                                  Business Impact
-                                </span>
-                                <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-                                  {issue.business_impact}
-                                </p>
-                              </div>
-                              <div>
-                                <span className="font-bold text-slate-700 dark:text-slate-300 uppercase text-[10px] block mb-1">
-                                  Recommended Fix
-                                </span>
-                                <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-                                  {issue.recommendation}
-                                </p>
-                              </div>
-                            </div>
-
-                            {issue.cleaning_code && (
-                              <div>
-                                <div className="flex items-center justify-between mb-1">
-                                  <span className="text-[10px] font-bold uppercase text-slate-500">
-                                    Pandas Cleaning Snippet:
-                                  </span>
-                                  <button
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      copyCode(issue.id, issue.cleaning_code);
-                                    }}
-                                    className="text-[10px] font-semibold text-brand-600 hover:text-brand-700 dark:text-brand-400"
-                                  >
-                                    {copiedId === issue.id ? 'Copied!' : 'Copy Code'}
-                                  </button>
-                                </div>
-                                <pre className="p-2.5 rounded-lg bg-slate-900 text-emerald-400 font-mono text-[11px] overflow-x-auto">
-                                  <code>{issue.cleaning_code}</code>
-                                </pre>
-                              </div>
-                            )}
-                          </td>
-                        </tr>
+                        {copiedRowsId === issue.id ? (
+                          <>
+                            <Check className="h-3 w-3 text-emerald-500" />
+                            <span className="text-emerald-600">Copied {rows.length} rows</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="h-3 w-3" />
+                            <span>Copy Row Numbers</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                    <div className="flex flex-wrap gap-1 max-h-24 overflow-y-auto p-2 rounded-xl bg-slate-50 dark:bg-slate-800/40 border border-slate-100 dark:border-slate-800">
+                      {rows.slice(0, isExpanded ? 200 : 25).map((rowNum) => (
+                        <span
+                          key={rowNum}
+                          className="inline-flex items-center px-2 py-0.5 rounded bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-mono text-[10px] font-medium border border-slate-200/80 dark:border-slate-700"
+                        >
+                          Row #{rowNum}
+                        </span>
+                      ))}
+                      {!isExpanded && rows.length > 25 && (
+                        <button
+                          onClick={() => setExpandedId(issue.id)}
+                          className="inline-flex items-center px-2 py-0.5 rounded bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 text-[10px] font-bold hover:underline"
+                        >
+                          +{rows.length - 25} more rows
+                        </button>
                       )}
-                    </React.Fragment>
-                  );
-                })
-              ) : (
-                <tr>
-                  <td colSpan={6} className="py-8 text-center text-slate-400">
-                    No issues match the selected filter criteria.
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* Pandas Code Block */}
+                {issue.cleaning_code && (
+                  <div className="pt-1">
+                    <div className="flex items-center justify-between mb-1">
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1">
+                        <FileCode className="h-3 w-3 text-brand-500" />
+                        <span>Remediation Python Code:</span>
+                      </span>
+                      <button
+                        onClick={() => copyCode(issue.id, issue.cleaning_code)}
+                        className="text-[11px] font-semibold text-brand-600 hover:text-brand-700 dark:text-brand-400 flex items-center gap-1"
+                      >
+                        {copiedId === issue.id ? (
+                          <>
+                            <Check className="h-3 w-3 text-emerald-500" />
+                            <span>Copied</span>
+                          </>
+                        ) : (
+                          <>
+                            <Copy className="h-3 w-3" />
+                            <span>Copy Code</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                    <pre className="p-2.5 rounded-xl bg-slate-900 text-emerald-400 font-mono text-[11px] overflow-x-auto">
+                      <code>{issue.cleaning_code}</code>
+                    </pre>
+                  </div>
+                )}
+              </div>
+            );
+          })
+        ) : (
+          <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center text-slate-400 dark:border-slate-800 dark:bg-slate-900">
+            No issues match the selected filters.
+          </div>
+        )}
       </div>
     </div>
   );

@@ -253,19 +253,13 @@ export default function App() {
                 />
               )}
 
-              {currentTab === 'anomalies' && (
-                <AnomalyDetectionPage
-                  issues={issues}
-                  activeDataset={activeDataset}
-                />
-              )}
-
-              {currentTab === 'issues' && (
+              {(currentTab === 'anomalies' || currentTab === 'issues') && (
                 <IssuesExplorerPage
                   issues={issues}
                   activeDataset={activeDataset}
                   initialCategory={issuesCategoryFilter}
                   initialSeverity={issuesSeverityFilter}
+                  onNavigate={setCurrentTab}
                 />
               )}
 
@@ -289,6 +283,7 @@ export default function App() {
               {currentTab === 'cleaning' && (
                 <CleaningPage
                   activeDataset={activeDataset}
+                  onNavigate={setCurrentTab}
                 />
               )}
 

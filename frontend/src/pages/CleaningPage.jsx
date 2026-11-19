@@ -2,125 +2,109 @@ import React, { useState } from 'react';
 import { 
   Wrench, 
   CheckCircle2, 
-  Eye, 
   Download, 
-  FileSpreadsheet, 
   ShieldCheck, 
   Play, 
-  RotateCcw, 
   ArrowRight,
-  Layers,
   Sparkles,
-  AlertCircle
+  ChevronDown,
+  ChevronUp,
+  FileSpreadsheet,
+  Check,
+  RotateCcw
 } from 'lucide-react';
 import dataGuardAPI from '../services/api';
 
 const AVAILABLE_OPERATIONS = [
   {
     id: 'impute_missing_values',
-    title: '1. Impute Missing & Placeholder Values (Universal)',
-    desc: 'Imputes all empty cells, nulls, and placeholder strings (median for numericals like salary/price, 0 for unplaced status, mode/Unknown for categoricals).',
+    title: 'Impute Missing & Null Values',
+    desc: 'Median for numerical columns, 0 for unplaced status, mode/Unknown for categoricals.',
     category: 'Missing Values'
   },
   {
     id: 'winsorize_iqr_outliers',
-    title: '2. Winsorize & Cap Statistical Outliers (Universal)',
-    desc: 'Clips extreme continuous values outside 1.5× IQR boundaries to statistical upper and lower thresholds across all numerical columns.',
-    category: 'Outliers & Math'
+    title: 'Winsorize Extreme Numerical Outliers',
+    desc: 'Caps statistical outliers to 1.5× IQR upper/lower statistical boundaries.',
+    category: 'Outliers'
   },
   {
     id: 'deduplicate_exact',
-    title: '3. Remove Exact Duplicate Rows',
-    desc: 'Eliminates 100% duplicate row copies while keeping the first recorded instance.',
+    title: 'Remove Exact Duplicate Rows',
+    desc: 'Eliminates 100% duplicate row copies while preserving the first instance.',
     category: 'Duplicates'
   },
   {
     id: 'deduplicate_business_keys',
-    title: '4. Resolve Primary Identifier Duplicates',
-    desc: 'Resolves duplicate order IDs, candidate serial numbers, and repeated transaction signatures.',
+    title: 'Resolve Identifier Duplicates',
+    desc: 'Resolves duplicate order IDs, candidate serial numbers, and transaction IDs.',
     category: 'Duplicates'
   },
   {
     id: 'fix_arithmetic_totals',
-    title: '5. Correct Arithmetic Mismatches in Total Amount',
-    desc: 'Recomputes total_amount = quantity * unit_price where blank or calculated incorrectly.',
-    category: 'Outliers & Math'
+    title: 'Recompute Arithmetic Mismatches',
+    desc: 'Ensures total_amount = quantity * unit_price where blank or incorrect.',
+    category: 'Calculations'
   },
   {
     id: 'standardize_cities',
-    title: '6. Standardize City Names & Official Designations',
-    desc: 'Maps obsolete names (Bombay->Mumbai, Bangalore->Bengaluru, Madras->Chennai, Calcutta->Kolkata, Gurgaon->Gurugram) and strips irregular whitespace.',
+    title: 'Standardize City Names',
+    desc: 'Normalizes Bombay->Mumbai, Bangalore->Bengaluru, Madras->Chennai, etc.',
     category: 'Inconsistencies'
   },
   {
     id: 'standardize_categories',
-    title: '7. Harmonize Product Category Taxonomy',
-    desc: 'Corrects singular/plural forms (Book->Books, Electronic->Electronics) and casing (SPORTS->Sports, home & kitchen).',
+    title: 'Harmonize Product Categories',
+    desc: 'Fixes singular/plural and casing (Book->Books, SPORTS->Sports).',
     category: 'Inconsistencies'
   },
   {
     id: 'standardize_payment_methods',
-    title: '8. Standardize Payment Gateway Terms',
-    desc: 'Normalizes abbreviations: COD / C.O.D -> Cash on Delivery, CC / CreditCard -> Credit Card, netbanking -> Net Banking.',
+    title: 'Standardize Payment Methods',
+    desc: 'Normalizes COD->Cash on Delivery, CC->Credit Card, netbanking->Net Banking.',
     category: 'Inconsistencies'
   },
   {
     id: 'clean_phones',
-    title: '9. Sanitize Phone Numbers to 10-Digit Mobile',
-    desc: 'Strips country codes (+91), hyphens, negative signs, and scientific notation to produce clean mobile numbers.',
+    title: 'Sanitize Phone Numbers',
+    desc: 'Strips country codes, dashes, and scientific notation to 10 digits.',
     category: 'Inconsistencies'
   },
   {
     id: 'clean_names',
-    title: '10. Title-Case & Clean Person / Customer Names',
-    desc: 'Fixes ALL-CAPS names, lowercase names, and collapses multiple whitespace characters into clean single spaces.',
+    title: 'Title-Case Person Names',
+    desc: 'Fixes ALL-CAPS names, lowercase names, and collapses extra whitespace.',
     category: 'Inconsistencies'
   },
   {
     id: 'clean_emails',
-    title: '11. Fix Email Syntax Typos',
-    desc: 'Replaces double @@ with @, double dots with single dot, and removes trailing spaces from email addresses.',
+    title: 'Fix Email Typo Syntax',
+    desc: 'Resolves double @@ and extra trailing spaces.',
     category: 'Inconsistencies'
   },
   {
     id: 'standardize_dates',
-    title: '12. Standardize Dates to ISO 8601 (YYYY-MM-DD)',
-    desc: 'Converts mixed date formats (M/D/YYYY, 28-Aug-26) to standard YYYY-MM-DD and fixes non-existent 2026-02-30 calendar dates.',
+    title: 'Standardize Dates (YYYY-MM-DD)',
+    desc: 'Converts mixed dates to ISO 8601 and fixes impossible calendar dates.',
     category: 'Inconsistencies'
   },
   {
     id: 'clamp_ratings',
-    title: '13. Enforce Customer Rating Scale [1 - 5]',
-    desc: 'Clamps anomalous ratings like 0 or 10 into the valid 1-to-5 star business scale.',
-    category: 'Outliers & Math'
+    title: 'Enforce Rating Range [1 - 5]',
+    desc: 'Clamps values outside 1-to-5 star business scale.',
+    category: 'Outliers'
   },
   {
     id: 'trim_all_text',
-    title: '14. Trim Whitespace & Normalize Casing (All Columns)',
-    desc: 'Collapses extra spaces, strips leading/trailing whitespace, and standardizes text across all columns.',
+    title: 'Trim Whitespace Across All Columns',
+    desc: 'Strips leading/trailing whitespace and normalizes internal spaces.',
     category: 'Inconsistencies'
   }
 ];
 
-export default function CleaningPage({ activeDataset, onDownloadCleaned }) {
-  const [selectedOps, setSelectedOps] = useState([
-    'impute_missing_values',
-    'winsorize_iqr_outliers',
-    'deduplicate_exact',
-    'deduplicate_business_keys',
-    'fix_arithmetic_totals',
-    'standardize_cities',
-    'standardize_categories',
-    'standardize_payment_methods',
-    'clean_phones',
-    'clean_names',
-    'clean_emails',
-    'standardize_dates',
-    'clamp_ratings',
-    'trim_all_text'
-  ]);
-  const [previewData, setPreviewData] = useState(null);
-  const [previewingOp, setPreviewingOp] = useState(null);
+export default function CleaningPage({ activeDataset, onNavigate }) {
+  const [selectedOps, setSelectedOps] = useState(AVAILABLE_OPERATIONS.map(o => o.id));
+  const [showAdvanced, setShowAdvanced] = useState(false);
   const [cleaning, setCleaning] = useState(false);
   const [cleanResult, setCleanResult] = useState(null);
 
@@ -129,19 +113,6 @@ export default function CleaningPage({ activeDataset, onDownloadCleaned }) {
       setSelectedOps(selectedOps.filter((item) => item !== id));
     } else {
       setSelectedOps([...selectedOps, id]);
-    }
-  };
-
-  const handlePreview = async (opId) => {
-    if (!activeDataset) return;
-    setPreviewingOp(opId);
-    try {
-      const data = await dataGuardAPI.previewCleaning(activeDataset.id, opId);
-      setPreviewData(data);
-    } catch (err) {
-      console.error('Preview error:', err);
-    } finally {
-      setPreviewingOp(null);
     }
   };
 
@@ -158,186 +129,88 @@ export default function CleaningPage({ activeDataset, onDownloadCleaned }) {
     }
   };
 
+  if (!activeDataset) {
+    return (
+      <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center text-slate-400 dark:border-slate-800 dark:bg-slate-900">
+        No dataset loaded. Upload a dataset to begin automated cleaning.
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-6">
-      {/* Header */}
+    <div className="max-w-4xl mx-auto space-y-6">
+      {/* Clean Header */}
       <div>
-        <h1 className="text-2xl font-black text-slate-900 dark:text-white">Data Cleaning & Remediation Pipeline</h1>
+        <h1 className="text-2xl font-black text-slate-900 dark:text-white">Clean Dataset</h1>
         <p className="text-xs text-slate-500 mt-1">
-          Select verified remediation rules to execute on a copy of {activeDataset?.filename || 'dataset'}.
+          Automated one-click non-destructive data remediation for <span className="font-semibold text-slate-700 dark:text-slate-300">{activeDataset.filename}</span>.
         </p>
       </div>
 
-      {/* Non-Destructive Guarantee Banner */}
-      <div className="rounded-2xl border border-emerald-200 bg-emerald-50/70 p-4 dark:border-emerald-900/60 dark:bg-emerald-950/20 flex items-center gap-3">
-        <ShieldCheck className="h-6 w-6 text-emerald-600 dark:text-emerald-400 shrink-0" />
-        <div className="text-xs">
-          <span className="font-bold text-emerald-900 dark:text-emerald-200">Non-Destructive Architecture Guarantee:</span>{' '}
-          <span className="text-emerald-800 dark:text-emerald-300">
-            Original uploaded datasets are strictly immutable. All transformations are applied to an isolated copy, generating a fresh, audit-verified cleaned CSV file.
-          </span>
-        </div>
-      </div>
-
-      {/* Cleaning Operations Selector */}
-      <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100 dark:border-slate-800">
-          <div>
-            <h3 className="text-base font-bold text-slate-900 dark:text-white">
-              Approved Cleaning Transformations ({selectedOps.length}/{AVAILABLE_OPERATIONS.length} Selected)
-            </h3>
-            <p className="text-xs text-slate-500 mt-0.5">Toggle the rules you want included in the remediation pipeline</p>
+      {/* Main 1-Click Auto-Clean Card */}
+      <div className="rounded-2xl border border-brand-200 bg-gradient-to-br from-brand-50/70 via-white to-indigo-50/40 p-6 shadow-sm dark:border-brand-900/40 dark:bg-slate-900 space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-start gap-3">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-brand-600 text-white shadow-md shadow-brand-500/25">
+              <Sparkles className="h-6 w-6" />
+            </div>
+            <div>
+              <h2 className="text-base font-bold text-slate-900 dark:text-white">
+                One-Click Complete Auto-Clean
+              </h2>
+              <p className="text-xs text-slate-600 dark:text-slate-400 mt-1 max-w-xl leading-relaxed">
+                Automatically resolves all detected missing values, statistical outliers, duplicate records, and inconsistent text formatting in a single pass.
+              </p>
+            </div>
           </div>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setSelectedOps(AVAILABLE_OPERATIONS.map((o) => o.id))}
-              className="text-xs font-semibold text-brand-600 hover:text-brand-700 dark:text-brand-400"
-            >
-              Select All
-            </button>
-            <span className="text-slate-300">|</span>
-            <button
-              onClick={() => setSelectedOps([])}
-              className="text-xs font-semibold text-slate-500 hover:text-slate-700 dark:text-slate-400"
-            >
-              Clear
-            </button>
-          </div>
-        </div>
 
-        <div className="space-y-3">
-          {AVAILABLE_OPERATIONS.map((op) => {
-            const isSelected = selectedOps.includes(op.id);
-            return (
-              <div
-                key={op.id}
-                className={`flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl border transition-all gap-3 ${
-                  isSelected
-                    ? 'border-brand-200 bg-brand-50/30 dark:border-brand-900/60 dark:bg-brand-950/20'
-                    : 'border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-900'
-                }`}
-              >
-                <div className="flex items-start gap-3">
-                  <input
-                    type="checkbox"
-                    checked={isSelected}
-                    onChange={() => toggleOp(op.id)}
-                    className="mt-1 h-4 w-4 rounded border-slate-300 text-brand-600 focus:ring-brand-500"
-                  />
-                  <div>
-                    <div className="flex items-center gap-2">
-                      <span className="font-bold text-xs text-slate-900 dark:text-white">{op.title}</span>
-                      <span className="rounded bg-slate-100 px-1.5 py-0.2 text-[9px] font-semibold text-slate-500 dark:bg-slate-800">
-                        {op.category}
-                      </span>
-                    </div>
-                    <p className="text-[11px] text-slate-500 mt-0.5">{op.desc}</p>
-                  </div>
-                </div>
-
-                <button
-                  onClick={() => handlePreview(op.id)}
-                  disabled={previewingOp === op.id}
-                  className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700 shrink-0 self-start sm:self-auto"
-                >
-                  <Eye className="h-3.5 w-3.5" />
-                  <span>{previewingOp === op.id ? 'Previewing...' : 'Preview Diff'}</span>
-                </button>
-              </div>
-            );
-          })}
-        </div>
-
-        {/* Action Button */}
-        <div className="pt-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="text-xs text-slate-500">
-            {selectedOps.length} cleaning operations configured.
-          </div>
           <button
             onClick={handleApplyCleaning}
             disabled={cleaning || selectedOps.length === 0}
-            className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-6 py-3 text-xs font-bold text-white shadow-md shadow-brand-500/30 hover:bg-brand-500 transition-all disabled:opacity-50"
+            className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-6 py-3 text-xs font-bold text-white shadow-md shadow-brand-500/30 hover:bg-brand-500 transition-all disabled:opacity-50 shrink-0"
           >
-            <Play className="h-4 w-4 fill-current" />
-            <span>{cleaning ? 'Applying Clean Pipeline...' : 'Execute Cleaning Pipeline'}</span>
+            {cleaning ? (
+              <>
+                <RotateCcw className="h-4 w-4 animate-spin" />
+                <span>Remediating Dataset...</span>
+              </>
+            ) : (
+              <>
+                <Play className="h-4 w-4 fill-current" />
+                <span>Auto-Clean All Defects Now</span>
+              </>
+            )}
           </button>
+        </div>
+
+        {/* Non-Destructive Note */}
+        <div className="pt-2 flex items-center gap-2 text-[11px] text-emerald-700 dark:text-emerald-300">
+          <ShieldCheck className="h-4 w-4 text-emerald-600 shrink-0" />
+          <span>Non-destructive: Your original CSV file is never altered. A sanitized clean copy is generated.</span>
         </div>
       </div>
 
-      {/* Preview Diff Modal / Card */}
-      {previewData && (
-        <div className="rounded-2xl border border-brand-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900 space-y-3">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-                Operation Preview: {previewData.operation}
-              </h3>
-              <p className="text-xs text-slate-500 mt-0.5">
-                {previewData.description} • {previewData.affected_count} records affected
-              </p>
-            </div>
-            <button
-              onClick={() => setPreviewData(null)}
-              className="text-xs font-semibold text-slate-400 hover:text-slate-600"
-            >
-              Close Preview ✕
-            </button>
-          </div>
-
-          <div className="overflow-x-auto rounded-xl border border-slate-200 dark:border-slate-800">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-slate-50 dark:bg-slate-800 text-slate-500 font-semibold">
-                <tr>
-                  <th className="py-2.5 px-3">Row #</th>
-                  <th className="py-2.5 px-3">Column</th>
-                  <th className="py-2.5 px-3">Original Value (Before)</th>
-                  <th className="py-2.5 px-3">Cleaned Value (After)</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                {previewData.sample_diffs.map((diff, idx) => (
-                  <tr key={idx}>
-                    <td className="py-2 px-3 font-mono font-bold text-slate-600 dark:text-slate-400">
-                      Row {diff.row_number}
-                    </td>
-                    <td className="py-2 px-3 font-medium text-slate-900 dark:text-white">
-                      {diff.column}
-                    </td>
-                    <td className="py-2 px-3 text-rose-600 font-mono">
-                      {diff.before}
-                    </td>
-                    <td className="py-2 px-3 text-emerald-600 font-mono font-bold">
-                      {diff.after}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      )}
-
-      {/* Clean Success Results Card */}
+      {/* Clean Result Card (Shown after cleaning) */}
       {cleanResult && (
-        <div className="rounded-2xl border border-emerald-200 bg-emerald-50/80 p-6 shadow-sm dark:border-emerald-900 dark:bg-emerald-950/30 space-y-4">
+        <div className="rounded-2xl border border-emerald-200 bg-emerald-50/80 p-6 shadow-sm dark:border-emerald-900 dark:bg-emerald-950/30 space-y-4 animate-fadeIn">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-sm">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-600 text-white shadow-sm">
                 <CheckCircle2 className="h-6 w-6" />
               </div>
               <div>
                 <h3 className="text-base font-bold text-emerald-900 dark:text-emerald-200">
-                  Cleaned Dataset Successfully Generated!
+                  Dataset Successfully Cleaned!
                 </h3>
                 <p className="text-xs text-emerald-700 dark:text-emerald-300 mt-0.5">
-                  Original records: {cleanResult.original_rows} → Cleaned records: {cleanResult.cleaned_rows} ({cleanResult.original_rows - cleanResult.cleaned_rows} exact duplicate rows pruned).
+                  Original rows: {cleanResult.original_rows} → Sanitized rows: {cleanResult.cleaned_rows} (All defects corrected).
                 </p>
               </div>
             </div>
 
             <a
-              href={`/api/export/cleaned/${activeDataset?.id}`}
-              download="cleaned_dataset.csv"
+              href={`/api/export/cleaned/${activeDataset.id}`}
+              download={`cleaned_${activeDataset.filename}`}
               className="inline-flex items-center gap-2 rounded-xl bg-emerald-600 px-5 py-2.5 text-xs font-bold text-white shadow-md shadow-emerald-600/30 hover:bg-emerald-500 transition-all shrink-0"
             >
               <Download className="h-4 w-4" />
@@ -347,27 +220,27 @@ export default function CleaningPage({ activeDataset, onDownloadCleaned }) {
 
           {/* Sample Cleaned Rows Table */}
           {cleanResult.preview && cleanResult.preview.length > 0 && (
-            <div>
-              <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-300">
-                Sample Cleaned Records:
+            <div className="pt-2">
+              <span className="text-[11px] font-bold uppercase tracking-wider text-emerald-800 dark:text-emerald-300 block mb-2">
+                Cleaned Data Preview (Sample First 5 Rows):
               </span>
-              <div className="mt-1.5 overflow-x-auto rounded-xl border border-emerald-200 bg-white dark:border-emerald-900 dark:bg-slate-900">
+              <div className="overflow-x-auto rounded-xl border border-emerald-200/80 dark:border-emerald-800 bg-white dark:bg-slate-900">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-emerald-100/50 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-semibold">
+                  <thead className="bg-slate-50 dark:bg-slate-800/60 text-slate-600 dark:text-slate-300 font-semibold">
                     <tr>
-                      {Object.keys(cleanResult.preview[0]).map((col) => (
-                        <th key={col} className="py-2 px-3 whitespace-nowrap">
-                          {col}
+                      {Object.keys(cleanResult.preview[0]).map((key) => (
+                        <th key={key} className="py-2 px-3 border-b border-slate-100 dark:border-slate-800 whitespace-nowrap">
+                          {key}
                         </th>
                       ))}
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
+                  <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300 font-mono text-[11px]">
                     {cleanResult.preview.map((row, rIdx) => (
-                      <tr key={rIdx}>
-                        {Object.keys(cleanResult.preview[0]).map((col) => (
-                          <td key={col} className="py-2 px-3 whitespace-nowrap">
-                            {String(row[col])}
+                      <tr key={rIdx} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
+                        {Object.values(row).map((val, cIdx) => (
+                          <td key={cIdx} className="py-2 px-3 whitespace-nowrap">
+                            {val !== null && val !== undefined ? String(val) : ''}
                           </td>
                         ))}
                       </tr>
@@ -379,6 +252,70 @@ export default function CleaningPage({ activeDataset, onDownloadCleaned }) {
           )}
         </div>
       )}
+
+      {/* Advanced Rules Customizer (Collapsible) */}
+      <div className="rounded-2xl border border-slate-200/80 bg-white shadow-xs dark:border-slate-800 dark:bg-slate-900 overflow-hidden">
+        <button
+          onClick={() => setShowAdvanced(!showAdvanced)}
+          className="w-full p-4 flex items-center justify-between text-left text-xs font-bold text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800/40 transition-colors"
+        >
+          <div className="flex items-center gap-2">
+            <Wrench className="h-4 w-4 text-slate-400" />
+            <span>Customize Specific Cleaning Rules ({selectedOps.length}/{AVAILABLE_OPERATIONS.length} Selected)</span>
+          </div>
+          {showAdvanced ? <ChevronUp className="h-4 w-4 text-slate-400" /> : <ChevronDown className="h-4 w-4 text-slate-400" />}
+        </button>
+
+        {showAdvanced && (
+          <div className="p-5 border-t border-slate-100 dark:border-slate-800 space-y-3">
+            <div className="flex items-center justify-between text-xs pb-2 border-b border-slate-100 dark:border-slate-800">
+              <span className="text-slate-500">Toggle individual operations as needed:</span>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setSelectedOps(AVAILABLE_OPERATIONS.map(o => o.id))}
+                  className="text-xs font-semibold text-brand-600 hover:underline"
+                >
+                  Select All
+                </button>
+                <span className="text-slate-300">|</span>
+                <button
+                  onClick={() => setSelectedOps([])}
+                  className="text-xs font-semibold text-slate-500 hover:underline"
+                >
+                  Clear All
+                </button>
+              </div>
+            </div>
+
+            <div className="grid sm:grid-cols-2 gap-2.5">
+              {AVAILABLE_OPERATIONS.map(op => {
+                const isSelected = selectedOps.includes(op.id);
+                return (
+                  <div
+                    key={op.id}
+                    onClick={() => toggleOp(op.id)}
+                    className={`p-3 rounded-xl border text-xs cursor-pointer transition-all flex items-start gap-2.5 ${
+                      isSelected
+                        ? 'border-brand-300 bg-brand-50/40 dark:border-brand-800 dark:bg-brand-950/20'
+                        : 'border-slate-200 bg-slate-50/50 opacity-60 dark:border-slate-800 dark:bg-slate-900'
+                    }`}
+                  >
+                    <div className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded border transition-colors ${
+                      isSelected ? 'border-brand-600 bg-brand-600 text-white' : 'border-slate-300 dark:border-slate-700'
+                    }`}>
+                      {isSelected && <Check className="h-3 w-3 stroke-[3]" />}
+                    </div>
+                    <div>
+                      <div className="font-bold text-slate-900 dark:text-white">{op.title}</div>
+                      <div className="text-[11px] text-slate-500 mt-0.5">{op.desc}</div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }

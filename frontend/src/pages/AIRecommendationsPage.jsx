@@ -49,7 +49,7 @@ export default function AIRecommendationsPage({
                 : 'bg-brand-50 text-brand-700 dark:bg-brand-950 dark:text-brand-300'
             }`}>
               <Sparkles className="h-3 w-3" />
-              <span>{insights.source === 'gemini_api' ? 'Gemini 1.5 Pro' : 'Rule Engine Engine'}</span>
+              <span>{insights.source === 'gemini_api' ? 'Gemini AI Active' : 'Rule-Based Engine'}</span>
             </span>
           </div>
           <p className="text-xs text-slate-500 mt-1">

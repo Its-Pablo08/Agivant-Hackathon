@@ -4,7 +4,6 @@ import {
   UploadCloud, 
   Table2, 
   AlertTriangle, 
-  Search, 
   Sparkles, 
   Award, 
   FileText, 
@@ -12,21 +11,22 @@ import {
   Settings as SettingsIcon,
   Home,
   ShieldCheck,
-  CheckCircle,
   Wrench
 } from 'lucide-react';
 
 export default function Sidebar({ currentTab, setCurrentTab, activeDataset, isAnalyzed }) {
-  const navItems = [
+  // Streamlined, functional navigation items
+  const mainNavItems = [
     { id: 'overview', label: 'Overview', icon: LayoutDashboard },
     { id: 'upload', label: 'Upload Dataset', icon: UploadCloud },
+    { id: 'issues', label: 'Issues & Anomalies', icon: AlertTriangle, disabled: !isAnalyzed },
+    { id: 'cleaning', label: 'Clean Dataset', icon: Wrench, disabled: !isAnalyzed },
     { id: 'profiling', label: 'Data Profiling', icon: Table2, disabled: !activeDataset },
-    { id: 'anomalies', label: 'Anomaly Detection', icon: AlertTriangle, disabled: !isAnalyzed },
-    { id: 'issues', label: 'Issues Explorer', icon: Search, disabled: !isAnalyzed },
-    { id: 'ai-insights', label: 'AI Recommendations', icon: Sparkles, disabled: !isAnalyzed },
-    { id: 'scoring', label: 'Quality Score', icon: Award, disabled: !isAnalyzed },
-    { id: 'cleaning', label: 'Cleaning Pipeline', icon: Wrench, disabled: !isAnalyzed },
+    { id: 'ai-insights', label: 'AI Insights', icon: Sparkles, disabled: !isAnalyzed },
     { id: 'reports', label: 'Reports & Export', icon: FileText, disabled: !isAnalyzed },
+  ];
+
+  const bottomNavItems = [
     { id: 'history', label: 'Scan History', icon: History },
     { id: 'settings', label: 'Settings', icon: SettingsIcon },
   ];
@@ -46,37 +46,25 @@ export default function Sidebar({ currentTab, setCurrentTab, activeDataset, isAn
         </div>
       </div>
 
-      {/* Navigation Links */}
+      {/* Main Navigation Links */}
       <nav className="flex-1 space-y-1 overflow-y-auto px-3 py-4">
-        <button
-          onClick={() => setCurrentTab('landing')}
-          className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-xs font-medium transition-all ${
-            currentTab === 'landing'
-              ? 'bg-brand-50 text-brand-700 dark:bg-brand-950/50 dark:text-brand-300 font-semibold'
-              : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800/50 dark:hover:text-slate-200'
-          }`}
-        >
-          <Home className="h-4 w-4" />
-          <span>Landing Page</span>
-        </button>
-
-        <div className="pt-2 pb-1">
-          <span className="px-3 text-[10px] font-semibold uppercase tracking-wider text-slate-400 dark:text-slate-500">
-            Analytics & Engine
+        <div className="pb-1">
+          <span className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+            Main Menu
           </span>
         </div>
 
-        {navItems.map((item) => {
+        {mainNavItems.map((item) => {
           const Icon = item.icon;
-          const isActive = currentTab === item.id;
+          const isActive = currentTab === item.id || (item.id === 'issues' && currentTab === 'anomalies');
           return (
             <button
               key={item.id}
               disabled={item.disabled}
               onClick={() => setCurrentTab(item.id)}
-              className={`flex w-full items-center justify-between rounded-lg px-3 py-2 text-xs font-medium transition-all ${
+              className={`flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-xs font-semibold transition-all ${
                 isActive
-                  ? 'bg-brand-600 text-white shadow-sm shadow-brand-500/30'
+                  ? 'bg-brand-600 text-white shadow-sm shadow-brand-500/25'
                   : item.disabled
                   ? 'cursor-not-allowed opacity-40 text-slate-400 dark:text-slate-600'
                   : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200'
@@ -86,32 +74,60 @@ export default function Sidebar({ currentTab, setCurrentTab, activeDataset, isAn
                 <Icon className={`h-4 w-4 ${isActive ? 'text-white' : 'text-slate-500 dark:text-slate-400'}`} />
                 <span>{item.label}</span>
               </div>
-              {item.id === 'scoring' && isAnalyzed && (
-                <span className={`h-2 w-2 rounded-full ${isActive ? 'bg-white' : 'bg-emerald-500'}`} />
+              {item.id === 'cleaning' && isAnalyzed && (
+                <span className={`h-1.5 w-1.5 rounded-full ${isActive ? 'bg-white' : 'bg-brand-400'}`} />
               )}
             </button>
           );
         })}
+
+        <div className="pt-4 pb-1">
+          <span className="px-3 text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500">
+            System & History
+          </span>
+        </div>
+
+        {bottomNavItems.map((item) => {
+          const Icon = item.icon;
+          const isActive = currentTab === item.id;
+          return (
+            <button
+              key={item.id}
+              onClick={() => setCurrentTab(item.id)}
+              className={`flex w-full items-center gap-3 rounded-xl px-3 py-2 text-xs font-semibold transition-all ${
+                isActive
+                  ? 'bg-brand-600 text-white shadow-sm shadow-brand-500/25'
+                  : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200'
+              }`}
+            >
+              <Icon className={`h-4 w-4 ${isActive ? 'text-white' : 'text-slate-500 dark:text-slate-400'}`} />
+              <span>{item.label}</span>
+            </button>
+          );
+        })}
+
+        <button
+          onClick={() => setCurrentTab('landing')}
+          className="flex w-full items-center gap-3 rounded-xl px-3 py-2 text-xs font-medium text-slate-500 hover:bg-slate-100 hover:text-slate-800 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-200 transition-all mt-2"
+        >
+          <Home className="h-4 w-4 text-slate-400" />
+          <span>Landing Page</span>
+        </button>
       </nav>
 
-      {/* Dataset Status Footer Card */}
+      {/* Active Dataset Status Footer */}
       {activeDataset && (
         <div className="p-3 border-t border-slate-200 dark:border-slate-800">
-          <div className="rounded-lg bg-slate-50 p-3 border border-slate-200/80 dark:bg-slate-800/60 dark:border-slate-700/60">
-            <div className="flex items-center justify-between mb-1">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Current File</span>
-              <span className={`inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold ${
-                isAnalyzed ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300' : 'bg-amber-100 text-amber-800 dark:bg-amber-950 dark:text-amber-300'
-              }`}>
-                {isAnalyzed ? 'Scanned' : 'Pending'}
+          <div className="rounded-xl bg-slate-50 p-3 border border-slate-200/80 dark:bg-slate-800/60 dark:border-slate-700/60">
+            <div className="flex items-center justify-between text-[11px] font-bold text-slate-700 dark:text-slate-300">
+              <span className="truncate max-w-[130px]">{activeDataset.filename}</span>
+              <span className="rounded bg-emerald-100 px-1.5 py-0.2 text-[9px] font-bold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+                Active
               </span>
             </div>
-            <div className="truncate text-xs font-medium text-slate-800 dark:text-slate-200" title={activeDataset.filename}>
-              {activeDataset.filename}
-            </div>
-            <div className="text-[10px] text-slate-400 mt-0.5">
-              {activeDataset.total_rows} rows • {activeDataset.total_columns} columns
-            </div>
+            <p className="text-[10px] text-slate-400 mt-0.5">
+              {activeDataset.total_rows} rows • {activeDataset.total_columns} cols
+            </p>
           </div>
         </div>
       )}

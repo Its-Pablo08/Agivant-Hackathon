@@ -4,13 +4,11 @@ import {
   Database, 
   AlertTriangle, 
   Award, 
-  TrendingUp, 
   ArrowRight, 
   Sparkles, 
   CheckCircle2, 
   Clock, 
   Download,
-  Zap,
   Play,
   Layers,
   Filter,
@@ -23,8 +21,7 @@ import {
   ChevronUp,
   Columns,
   Hash,
-  Eye,
-  Sliders
+  Wrench
 } from 'lucide-react';
 import { 
   ResponsiveContainer, 
@@ -65,8 +62,6 @@ export default function OverviewPage({
   analyzing,
   onDrilldown
 }) {
-  const [viewScope, setViewScope] = useState('active'); // 'active' or 'global'
-  
   // Drill-down inspector state
   const [drilldownTarget, setDrilldownTarget] = useState(null); // { type: 'category' | 'severity', value: string }
   const [selectedDrillColumn, setSelectedDrillColumn] = useState('all');
@@ -85,7 +80,7 @@ export default function OverviewPage({
     recent_scans: []
   };
 
-  // Compute active dataset-specific metrics from issues
+  // Compute active dataset metrics
   const activeIssues = issues || [];
   const activeTotalIssues = activeIssues.reduce((acc, i) => acc + (i.issue_count || 1), 0);
   
@@ -106,44 +101,22 @@ export default function OverviewPage({
     activeSeverityCounts[sev] = (activeSeverityCounts[sev] || 0) + (i.issue_count || 1);
   });
 
-  const isScopeActive = viewScope === 'active' && activeDataset;
+  // Chart data
+  const categoryData = Object.entries(activeCategoryCounts).map(([name, value]) => ({
+    name,
+    value,
+    color: CATEGORY_COLORS[name] || '#6366f1'
+  }));
 
-  // Chart data based on scope
-  const categoryData = isScopeActive
-    ? Object.entries(activeCategoryCounts).map(([name, value]) => ({
-        name,
-        value,
-        color: CATEGORY_COLORS[name] || '#6366f1'
-      }))
-    : Object.entries(globalStats.category_distribution || {}).map(([name, value]) => ({
-        name,
-        value,
-        color: CATEGORY_COLORS[name] || '#6366f1'
-      }));
+  const severityData = Object.entries(activeSeverityCounts).map(([name, count]) => ({
+    name,
+    count,
+    fill: SEVERITY_COLORS[name] || '#6366f1'
+  }));
 
-  const severityData = isScopeActive
-    ? Object.entries(activeSeverityCounts).map(([name, count]) => ({
-        name,
-        count,
-        fill: SEVERITY_COLORS[name] || '#6366f1'
-      }))
-    : Object.entries(globalStats.severity_distribution || {}).map(([name, value]) => ({
-        name,
-        count: value,
-        fill: SEVERITY_COLORS[name] || '#6366f1'
-      }));
-
-  const currentScore = isScopeActive
-    ? (scoreData?.overall_score ?? (analysisResult?.scores?.overall_score ?? 100))
-    : globalStats.average_quality_score;
-
-  const currentRecords = isScopeActive
-    ? (activeDataset.total_rows || 0)
-    : globalStats.total_records_processed;
-
-  const currentIssues = isScopeActive
-    ? activeTotalIssues
-    : globalStats.total_issues_detected;
+  const currentScore = scoreData?.overall_score ?? (analysisResult?.scores?.overall_score ?? 100);
+  const currentRecords = activeDataset?.total_rows || 0;
+  const currentIssues = activeTotalIssues;
 
   const getScoreColor = (score) => {
     if (score >= 90) return 'text-emerald-500';
@@ -167,7 +140,7 @@ export default function OverviewPage({
     setSelectedDrillColumn('all');
   };
 
-  // Filter issues matching drill-down selection
+  // Filter issues matching drilldown
   const matchingIssues = useMemo(() => {
     if (!drilldownTarget) return [];
     return activeIssues.filter(iss => {
@@ -181,18 +154,15 @@ export default function OverviewPage({
     });
   }, [activeIssues, drilldownTarget]);
 
-  // Unique affected columns in this drill-down
   const affectedColumns = useMemo(() => {
     return [...new Set(matchingIssues.map(i => i.column_name).filter(Boolean))];
   }, [matchingIssues]);
 
-  // Filtered by selected column
   const displayedIssues = useMemo(() => {
     if (selectedDrillColumn === 'all') return matchingIssues;
     return matchingIssues.filter(i => i.column_name === selectedDrillColumn);
   }, [matchingIssues, selectedDrillColumn]);
 
-  // Unique affected Excel row numbers
   const uniqueAffectedRows = useMemo(() => {
     const set = new Set();
     displayedIssues.forEach(i => {
@@ -230,119 +200,129 @@ export default function OverviewPage({
 
   return (
     <div className="space-y-6">
-      {/* Top Welcome & Quick Action Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-2xl bg-gradient-to-r from-brand-900 via-indigo-900 to-slate-900 p-6 text-white shadow-lg">
-        <div>
-          <div className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-3 py-1 text-xs font-semibold backdrop-blur">
-            <Sparkles className="h-3.5 w-3.5 text-amber-300" />
-            <span>AI Autonomous Quality Engine</span>
-          </div>
-          <h1 className="mt-2 text-2xl font-black tracking-tight">DataGuard AI Executive Dashboard</h1>
-          <p className="text-xs text-indigo-200 mt-1 max-w-xl">
-            Real-time automated dataset profiling, anomaly detection, scoring, and cleaning recommendations.
-          </p>
-        </div>
-        <div className="flex flex-wrap items-center gap-3">
-          <button
-            onClick={() => onNavigate('upload')}
-            className="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-4 py-2.5 text-xs font-bold text-white shadow-md shadow-brand-500/30 hover:bg-brand-400 transition-all"
-          >
-            <span>Upload Dataset</span>
-            <ArrowRight className="h-4 w-4" />
-          </button>
-        </div>
-      </div>
-
-      {/* Scope Selector: Active Dataset vs Global Catalog */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 rounded-2xl bg-white border border-slate-200/80 dark:bg-slate-900 dark:border-slate-800 shadow-sm">
-        <div className="flex items-center gap-2 text-xs">
-          <span className="font-bold text-slate-700 dark:text-slate-300">Dashboard View Scope:</span>
-          {activeDataset && (
-            <span className="text-slate-400">
-              (Currently viewing {isScopeActive ? 'active file only' : 'all datasets aggregated'})
-            </span>
-          )}
-        </div>
-        <div className="inline-flex p-1 bg-slate-100 dark:bg-slate-800 rounded-xl">
-          <button
-            onClick={() => setViewScope('active')}
-            disabled={!activeDataset}
-            className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 ${
-              isScopeActive 
-                ? 'bg-white dark:bg-slate-900 text-brand-600 dark:text-brand-400 shadow-sm' 
-                : 'text-slate-500 hover:text-slate-900 dark:hover:text-white disabled:opacity-40'
-            }`}
-          >
-            <Layers className="h-3.5 w-3.5" />
-            <span>Active: {activeDataset?.filename || 'No File Selected'}</span>
-          </button>
-          <button
-            onClick={() => setViewScope('global')}
-            className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 ${
-              !isScopeActive 
-                ? 'bg-white dark:bg-slate-900 text-brand-600 dark:text-brand-400 shadow-sm' 
-                : 'text-slate-500 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            <Database className="h-3.5 w-3.5" />
-            <span>All Datasets ({globalStats.total_datasets} Total)</span>
-          </button>
-        </div>
-      </div>
-
-      {/* KPI Cards Row */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-              {isScopeActive ? 'Current Dataset' : 'Datasets Scanned'}
-            </span>
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-brand-50 text-brand-600 dark:bg-brand-950/60 dark:text-brand-400">
-              <Database className="h-4 w-4" />
+      {/* Clean Top Header & Dataset Action Card */}
+      {activeDataset ? (
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-xs dark:border-slate-800 dark:bg-slate-900 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3.5">
+            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-600 text-white shadow-sm">
+              <FileSpreadsheet className="h-6 w-6" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h1 className="text-lg font-black text-slate-900 dark:text-white">
+                  {activeDataset.filename}
+                </h1>
+                <span className="rounded-full bg-emerald-100 px-2.5 py-0.5 text-[10px] font-bold text-emerald-800 dark:bg-emerald-950 dark:text-emerald-300">
+                  Active
+                </span>
+                {analysisResult?.scores?.quality_grade && (
+                  <span className="rounded-full bg-brand-50 px-2.5 py-0.5 text-[10px] font-bold text-brand-700 dark:bg-brand-950 dark:text-brand-300 border border-brand-200/60 dark:border-brand-800">
+                    Grade: {analysisResult.scores.quality_grade}
+                  </span>
+                )}
+              </div>
+              <p className="text-xs text-slate-500 mt-1">
+                {activeDataset.total_rows.toLocaleString()} rows • {activeDataset.total_columns} columns • {currentIssues === 0 ? 'Zero defects detected (100% clean)' : `${currentIssues.toLocaleString()} anomalies detected across ${Object.keys(activeCategoryCounts).length} categories`}
+              </p>
             </div>
           </div>
-          <div className="mt-3 text-lg font-black text-slate-900 dark:text-white truncate">
-            {isScopeActive ? activeDataset.filename : `${globalStats.total_datasets} files`}
-          </div>
-          <div className="mt-1 flex items-center text-[11px] text-slate-500">
-            <span>{isScopeActive ? `${activeDataset.total_columns} columns validated` : 'Stored in SQLite catalog'}</span>
+
+          <div className="flex items-center gap-2.5 shrink-0">
+            {currentIssues > 0 ? (
+              <>
+                <button
+                  onClick={() => onNavigate('issues')}
+                  className="rounded-xl border border-slate-200 bg-white px-3.5 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 transition-all shadow-xs"
+                >
+                  View Issues ({currentIssues})
+                </button>
+                <button
+                  onClick={() => onNavigate('cleaning')}
+                  className="inline-flex items-center gap-1.5 rounded-xl bg-brand-600 px-4 py-2 text-xs font-bold text-white shadow-md shadow-brand-500/25 hover:bg-brand-500 transition-all"
+                >
+                  <Wrench className="h-3.5 w-3.5" />
+                  <span>Clean Dataset</span>
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => onNavigate('reports')}
+                className="inline-flex items-center gap-1.5 rounded-xl bg-emerald-600 px-4 py-2 text-xs font-bold text-white shadow-md shadow-emerald-600/25 hover:bg-emerald-500 transition-all"
+              >
+                <Download className="h-3.5 w-3.5" />
+                <span>Download Report</span>
+              </button>
+            )}
           </div>
         </div>
+      ) : (
+        <div className="rounded-2xl border border-dashed border-slate-300 bg-white p-8 text-center dark:border-slate-800 dark:bg-slate-900">
+          <p className="text-sm font-semibold text-slate-600 dark:text-slate-400">No dataset loaded yet.</p>
+          <button
+            onClick={() => onNavigate('upload')}
+            className="mt-3 inline-flex items-center gap-2 rounded-xl bg-brand-600 px-4 py-2 text-xs font-bold text-white hover:bg-brand-500 shadow-sm"
+          >
+            <span>Upload CSV Dataset</span>
+            <ArrowRight className="h-3.5 w-3.5" />
+          </button>
+        </div>
+      )}
 
-        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+      {/* 4 Core Functional Metric Cards */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* Records */}
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs dark:border-slate-800 dark:bg-slate-900">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-              {isScopeActive ? 'Dataset Records' : 'Records Processed'}
-            </span>
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-950/60 dark:text-indigo-400">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Total Records</span>
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-950 dark:text-indigo-400">
               <FileSpreadsheet className="h-4 w-4" />
             </div>
           </div>
           <div className="mt-3 text-2xl font-black text-slate-900 dark:text-white">
             {currentRecords.toLocaleString()}
           </div>
-          <div className="mt-1 flex items-center text-[11px] text-emerald-600 dark:text-emerald-400 font-medium">
-            <span>{isScopeActive ? 'Rows in active file' : 'Validated across all files'}</span>
+          <div className="mt-1 text-[11px] text-slate-500">
+            {activeDataset?.total_columns || 0} validated columns
           </div>
         </div>
 
+        {/* Quality Score */}
+        <div 
+          onClick={() => onNavigate('scoring')}
+          className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs dark:border-slate-800 dark:bg-slate-900 cursor-pointer hover:border-brand-400 transition-all"
+          title="Click to view full quality score breakdown"
+        >
+          <div className="flex items-center justify-between">
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Quality Score</span>
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400">
+              <Award className="h-4 w-4" />
+            </div>
+          </div>
+          <div className="mt-3 text-2xl font-black text-slate-900 dark:text-white flex items-baseline gap-1">
+            <span className={getScoreColor(currentScore)}>{currentScore}</span>
+            <span className="text-xs font-medium text-slate-400">/ 100</span>
+          </div>
+          <div className="mt-1 text-[11px] text-slate-500">
+            {analysisResult?.scores?.quality_grade || 'Calculated'} grade
+          </div>
+        </div>
+
+        {/* Anomalies Detected (Clickable) */}
         <div 
           onClick={() => {
             if (activeIssues.length > 0) {
               setDrilldownTarget({ type: 'category', value: activeIssues[0]?.category || 'Missing Values' });
             }
           }}
-          className={`rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 transition-all ${
-            activeIssues.length > 0 ? 'cursor-pointer hover:border-brand-400 hover:shadow-md' : ''
+          className={`rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs dark:border-slate-800 dark:bg-slate-900 transition-all ${
+            activeIssues.length > 0 ? 'cursor-pointer hover:border-amber-400' : ''
           }`}
           title={activeIssues.length > 0 ? 'Click to inspect anomalies by category' : ''}
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-              {isScopeActive ? 'Anomalies in File' : 'Total Issues Detected'}
-            </span>
-            <div className={`flex h-9 w-9 items-center justify-center rounded-xl ${
-              currentIssues === 0 ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60' : 'bg-amber-50 text-amber-600 dark:bg-amber-950/60'
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Detected Issues</span>
+            <div className={`flex h-8 w-8 items-center justify-center rounded-xl ${
+              currentIssues === 0 ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-950' : 'bg-amber-50 text-amber-600 dark:bg-amber-950'
             }`}>
               {currentIssues === 0 ? <CheckCircle2 className="h-4 w-4" /> : <AlertTriangle className="h-4 w-4" />}
             </div>
@@ -350,120 +330,50 @@ export default function OverviewPage({
           <div className={`mt-3 text-2xl font-black ${currentIssues === 0 ? 'text-emerald-600 dark:text-emerald-400' : 'text-amber-600 dark:text-amber-400'}`}>
             {currentIssues.toLocaleString()}
           </div>
-          <div className="mt-1 flex items-center text-[11px] text-slate-500">
-            <span>{currentIssues === 0 ? 'Zero defects found' : 'Across 4 detection categories (Click to inspect)'}</span>
+          <div className="mt-1 text-[11px] text-slate-500">
+            {currentIssues === 0 ? 'Zero defects found' : 'Click to inspect rows & columns'}
           </div>
         </div>
 
-        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        {/* Status / Quick Action */}
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-xs dark:border-slate-800 dark:bg-slate-900">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-              {isScopeActive ? 'Dataset Score' : 'Avg Quality Score'}
-            </span>
-            <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400">
-              <Award className="h-4 w-4" />
+            <span className="text-xs font-bold uppercase tracking-wider text-slate-400">Remediation Status</span>
+            <div className="flex h-8 w-8 items-center justify-center rounded-xl bg-purple-50 text-purple-600 dark:bg-purple-950 dark:text-purple-400">
+              <Sparkles className="h-4 w-4" />
             </div>
           </div>
-          <div className="mt-3 text-2xl font-black text-slate-900 dark:text-white">
-            <span className={getScoreColor(currentScore)}>{currentScore}</span>
-            <span className="text-xs font-medium text-slate-400"> / 100</span>
-          </div>
-          <div className="mt-1 flex items-center text-[11px] text-slate-500">
-            <span>Weighted 4-dimension index</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Active Dataset Alert / Callout */}
-      {activeDataset && (
-        <div className="rounded-2xl border border-brand-200 bg-brand-50/50 p-5 dark:border-brand-900/60 dark:bg-brand-950/20 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div className="flex items-start gap-3">
-            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-brand-600 text-white shadow-sm">
-              <FileSpreadsheet className="h-5 w-5" />
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-bold text-slate-900 dark:text-white">{activeDataset.filename}</span>
-                <span className="rounded-full bg-brand-100 px-2 py-0.5 text-[10px] font-bold text-brand-800 dark:bg-brand-900 dark:text-brand-300">
-                  {activeDataset.total_rows} rows • {activeDataset.total_columns} columns
-                </span>
-                <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-bold text-emerald-800 dark:bg-emerald-900 dark:text-emerald-300">
-                  Active
-                </span>
-              </div>
-              <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
-                {analysisResult 
-                  ? `Scan complete. Quality Score: ${analysisResult.scores?.overall_score}/100 (${analysisResult.scores?.quality_grade}). ${analysisResult.total_anomalies} anomalies found in this file.` 
-                  : 'Dataset loaded and ready for full anomaly analysis.'}
-              </p>
-            </div>
-          </div>
-          <div className="flex items-center gap-2">
-            {!analysisResult ? (
-              <button
-                onClick={() => onRunAnalysis(activeDataset.id)}
-                disabled={analyzing}
-                className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-4 py-2 text-xs font-bold text-white shadow-md shadow-brand-500/25 hover:bg-brand-500 transition-all disabled:opacity-50"
-              >
-                <Play className="h-3.5 w-3.5 fill-current" />
-                <span>{analyzing ? 'Scanning...' : 'Run Analysis Now'}</span>
-              </button>
+          <div className="mt-3 text-lg font-black text-slate-900 dark:text-white">
+            {currentIssues === 0 ? (
+              <span className="text-emerald-600 dark:text-emerald-400">100% Ready</span>
             ) : (
-              <>
-                <button
-                  onClick={() => onNavigate('scoring')}
-                  className="rounded-xl border border-brand-300 bg-white px-3 py-1.5 text-xs font-semibold text-brand-700 hover:bg-brand-50 dark:border-brand-700 dark:bg-slate-800 dark:text-brand-300 transition-all shadow-sm"
-                >
-                  View Score Card
-                </button>
-                <button
-                  onClick={() => onNavigate('cleaning')}
-                  className="rounded-xl bg-brand-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-brand-500 transition-all shadow-sm"
-                >
-                  Clean Dataset
-                </button>
-              </>
+              <span className="text-brand-600 dark:text-brand-400">Ready to Clean</span>
             )}
           </div>
+          <div className="mt-1 text-[11px] text-slate-500">
+            {currentIssues === 0 ? 'Cleaned CSV available' : 'Automated 1-click pipeline'}
+          </div>
         </div>
-      )}
-
-      {/* Interactive Graph Hint Banner */}
-      <div className="flex items-center justify-between gap-3 px-4 py-2.5 rounded-xl bg-indigo-50/80 dark:bg-indigo-950/40 border border-indigo-200/60 dark:border-indigo-800/60 text-xs text-indigo-900 dark:text-indigo-200">
-        <div className="flex items-center gap-2">
-          <Sparkles className="h-4 w-4 text-indigo-600 dark:text-indigo-400 shrink-0" />
-          <span className="font-bold">Interactive Graphs:</span>
-          <span>Click on any slice in the donut chart or bar in the severity chart below to inspect affected rows and columns.</span>
-        </div>
-        {activeIssues.length > 0 && (
-          <button 
-            onClick={() => onNavigate('issues')}
-            className="text-indigo-600 dark:text-indigo-400 font-bold hover:underline shrink-0 flex items-center gap-1"
-          >
-            <span>Full Explorer</span>
-            <ArrowRight className="h-3 w-3" />
-          </button>
-        )}
       </div>
 
-      {/* Visual Analytics Grid */}
+      {/* Visual Analytics: Clickable Interactive Graphs */}
       <div className="grid lg:grid-cols-2 gap-6">
         {/* Issue Distribution by Category */}
-        <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-xs dark:border-slate-800 dark:bg-slate-900">
           <div className="flex items-center justify-between mb-2">
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-                  Issue Distribution by Category {isScopeActive ? `(${activeDataset.filename})` : '(All Datasets)'}
+                  Issue Distribution by Category
                 </h3>
-                <span className="rounded-full bg-brand-50 px-2 py-0.5 text-[10px] font-bold text-brand-600 dark:bg-brand-950 dark:text-brand-400 border border-brand-200/50 dark:border-brand-800">
-                  Clickable
-                </span>
+                {currentIssues > 0 && (
+                  <span className="rounded-full bg-brand-50 px-2 py-0.5 text-[10px] font-bold text-brand-600 dark:bg-brand-950 dark:text-brand-400 border border-brand-200/50">
+                    Click slice to view rows
+                  </span>
+                )}
               </div>
               <p className="text-xs text-slate-500 mt-0.5">
-                {isScopeActive 
-                  ? `Breakdown of anomalies specifically detected in ${activeDataset.filename} (click a slice to inspect)` 
-                  : 'Aggregate across all analyzed datasets'}
+                Breakdown of anomalies detected across categories
               </p>
             </div>
           </div>
@@ -486,12 +396,12 @@ export default function OverviewPage({
                       <Cell 
                         key={`cell-${index}`} 
                         fill={entry.color} 
-                        className="cursor-pointer transition-transform hover:opacity-85"
+                        className="cursor-pointer transition-opacity hover:opacity-85"
                       />
                     ))}
                   </Pie>
                   <Tooltip 
-                    formatter={(value, name) => [`${value} anomalies • Click to inspect`, name]} 
+                    formatter={(value, name) => [`${value} anomalies (Click to inspect)`, name]} 
                   />
                   <Legend 
                     verticalAlign="bottom" 
@@ -504,12 +414,12 @@ export default function OverviewPage({
               </ResponsiveContainer>
             ) : (
               <div className="flex flex-col h-full items-center justify-center text-center p-6 space-y-2">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400">
                   <CheckCircle className="h-6 w-6" />
                 </div>
-                <div className="text-sm font-bold text-slate-900 dark:text-white">Zero Anomalies in {activeDataset?.filename || 'Dataset'}</div>
+                <div className="text-sm font-bold text-slate-900 dark:text-white">Zero Anomalies in File</div>
                 <p className="text-xs text-slate-500 max-w-sm">
-                  All {currentRecords} rows and {activeDataset?.total_columns || 0} columns passed completeness, uniqueness, and consistency checks!
+                  All {currentRecords} rows passed completeness, uniqueness, and consistency checks!
                 </p>
               </div>
             )}
@@ -517,18 +427,20 @@ export default function OverviewPage({
         </div>
 
         {/* Severity Breakdown Bar Chart */}
-        <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-xs dark:border-slate-800 dark:bg-slate-900">
           <div className="flex items-center justify-between mb-2">
             <div>
               <div className="flex items-center gap-2">
                 <h3 className="text-sm font-bold text-slate-900 dark:text-white">
-                  Anomalies by Severity {isScopeActive ? `(${activeDataset.filename})` : '(All Datasets)'}
+                  Anomalies by Severity
                 </h3>
-                <span className="rounded-full bg-brand-50 px-2 py-0.5 text-[10px] font-bold text-brand-600 dark:bg-brand-950 dark:text-brand-400 border border-brand-200/50 dark:border-brand-800">
-                  Clickable
-                </span>
+                {currentIssues > 0 && (
+                  <span className="rounded-full bg-brand-50 px-2 py-0.5 text-[10px] font-bold text-brand-600 dark:bg-brand-950 dark:text-brand-400 border border-brand-200/50">
+                    Click bar to view rows
+                  </span>
+                )}
               </div>
-              <p className="text-xs text-slate-500 mt-0.5">Critical vs High vs Medium vs Informational Low issues (click a bar to inspect)</p>
+              <p className="text-xs text-slate-500 mt-0.5">Critical vs High vs Medium vs Informational Low issues</p>
             </div>
           </div>
           <div className="h-64 w-full">
@@ -538,7 +450,7 @@ export default function OverviewPage({
                   <XAxis dataKey="name" tick={{ fontSize: 11 }} />
                   <YAxis tick={{ fontSize: 11 }} />
                   <Tooltip 
-                    formatter={(value, name) => [`${value} issues • Click to inspect`, 'Count']} 
+                    formatter={(value, name) => [`${value} issues (Click to inspect)`, 'Count']} 
                   />
                   <Bar 
                     dataKey="count" 
@@ -558,7 +470,7 @@ export default function OverviewPage({
               </ResponsiveContainer>
             ) : (
               <div className="flex flex-col h-full items-center justify-center text-center p-6 space-y-2">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950/60 dark:text-emerald-400">
+                <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400">
                   <CheckCircle2 className="h-6 w-6" />
                 </div>
                 <div className="text-sm font-bold text-slate-900 dark:text-white">Fully Compliant Dataset</div>
@@ -572,11 +484,11 @@ export default function OverviewPage({
       </div>
 
       {/* Recent Scans Table */}
-      <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+      <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-xs dark:border-slate-800 dark:bg-slate-900">
         <div className="flex items-center justify-between mb-4">
           <div>
             <h3 className="text-sm font-bold text-slate-900 dark:text-white">Recent Dataset Scans</h3>
-            <p className="text-xs text-slate-500">History of analyzed files with overall quality metrics (click Inspect to view)</p>
+            <p className="text-xs text-slate-500">History of analyzed files with overall quality metrics</p>
           </div>
           <button
             onClick={() => onNavigate('history')}
@@ -595,7 +507,6 @@ export default function OverviewPage({
                 <th className="py-2.5 px-4 font-semibold">Columns</th>
                 <th className="py-2.5 px-4 font-semibold">Score</th>
                 <th className="py-2.5 px-4 font-semibold">Grade</th>
-                <th className="py-2.5 px-4 font-semibold">Scan Date</th>
                 <th className="py-2.5 px-4 font-semibold text-right">Actions</th>
               </tr>
             </thead>
@@ -637,19 +548,14 @@ export default function OverviewPage({
                           <span className="text-slate-400 text-[10px]">Pending</span>
                         )}
                       </td>
-                      <td className="py-3 px-4 text-slate-500">
-                        {scan.uploaded_at ? scan.uploaded_at.split('T')[0] : 'Today'}
-                      </td>
                       <td className="py-3 px-4 text-right">
                         <button
                           onClick={() => {
                             if (onSelectDataset) onSelectDataset(scan.id);
-                            setViewScope('active');
-                            onNavigate('profiling');
                           }}
                           className="text-xs font-semibold text-brand-600 hover:text-brand-700 dark:text-brand-400"
                         >
-                          Inspect →
+                          Select →
                         </button>
                       </td>
                     </tr>
@@ -657,7 +563,7 @@ export default function OverviewPage({
                 })
               ) : (
                 <tr>
-                  <td colSpan={7} className="py-8 text-center text-slate-400">
+                  <td colSpan={6} className="py-6 text-center text-slate-400">
                     No scans in history yet. Upload a dataset to begin.
                   </td>
                 </tr>
@@ -693,7 +599,7 @@ export default function OverviewPage({
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-bold uppercase tracking-wider text-slate-400">
-                      Interactive Graph Inspector • {drilldownTarget.type === 'category' ? 'Category' : 'Severity'}
+                      Graph Inspector • {drilldownTarget.type === 'category' ? 'Category' : 'Severity'}
                     </span>
                   </div>
                   <h2 className="text-xl font-black text-slate-900 dark:text-white mt-0.5 flex items-center gap-2">
