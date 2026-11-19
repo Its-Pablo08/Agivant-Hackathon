@@ -224,6 +224,9 @@ export default function App() {
                   dashboardStats={dashboardStats}
                   activeDataset={activeDataset}
                   analysisResult={analysisResult}
+                  issues={issues}
+                  scoreData={scoreData}
+                  onSelectDataset={handleSelectDataset}
                   onNavigate={setCurrentTab}
                   onLoadSample={handleLoadSample}
                   onRunAnalysis={runAnalysis}

@@ -19,17 +19,24 @@ def calculate_quality_scores(df: pd.DataFrame, issues: List[Dict[str, Any]]) -> 
         col = issue["column_name"]
         count = issue["issue_count"]
         
-        # Track column issues
+        # Track column issues (handle composite names like 'total_amount (Arithmetic Logic Mismatch)')
+        matched = False
         if col in col_issue_counts:
             col_issue_counts[col] += count
-        elif col.startswith("All Columns"):
+            matched = True
+        else:
+            base_col = col.split()[0].strip()
+            if base_col in col_issue_counts:
+                col_issue_counts[base_col] += count
+                matched = True
+        if not matched and col.startswith("All Columns"):
             for c in df.columns:
                 col_issue_counts[c] += (count / total_cols)
                 
         if cat == "Missing Values":
             # For optional rating column, soften impact
             if "rating" in col.lower():
-                missing_cells += (count * 0.2) # minor penalty for optional field
+                missing_cells += (count * 0.25)
             else:
                 missing_cells += count
         elif cat == "Duplicate Records":
@@ -40,20 +47,41 @@ def calculate_quality_scores(df: pd.DataFrame, issues: List[Dict[str, Any]]) -> 
             inconsistent_cells += count
             
     # 1. Completeness Score (0-100)
-    # Required non-missing values
-    completeness = max(0.0, min(100.0, 100.0 - (missing_cells / total_cells * 100.0 * 2.5)))
+    # Deduct strictly if missing cells exist
+    if missing_cells > 0:
+        pct_missing = (missing_cells / total_cells) * 100.0
+        completeness = max(0.0, min(99.0, 100.0 - (pct_missing * 3.5) - 1.0))
+    else:
+        completeness = 100.0
     
     # 2. Uniqueness Score (0-100)
-    uniqueness = max(0.0, min(100.0, 100.0 - (duplicate_rows / max(1, total_rows) * 100.0)))
+    if duplicate_rows > 0:
+        pct_dupes = (duplicate_rows / max(1, total_rows)) * 100.0
+        uniqueness = max(0.0, min(99.0, 100.0 - (pct_dupes * 2.0) - 1.0))
+    else:
+        uniqueness = 100.0
     
     # 3. Validity Score (0-100)
-    validity = max(0.0, min(100.0, 100.0 - (invalid_cells / total_cells * 100.0 * 3.0)))
+    if invalid_cells > 0:
+        pct_invalid = (invalid_cells / total_cells) * 100.0
+        validity = max(0.0, min(99.0, 100.0 - (pct_invalid * 3.0) - 1.0))
+    else:
+        validity = 100.0
     
     # 4. Consistency Score (0-100)
-    consistency = max(0.0, min(100.0, 100.0 - (inconsistent_cells / total_cells * 100.0 * 2.0)))
+    if inconsistent_cells > 0:
+        pct_inconsistent = (inconsistent_cells / total_cells) * 100.0
+        consistency = max(0.0, min(99.0, 100.0 - (pct_inconsistent * 2.5) - 1.0))
+    else:
+        consistency = 100.0
     
     # Weighted Overall Score
     overall = (completeness * 0.30) + (uniqueness * 0.25) + (validity * 0.25) + (consistency * 0.20)
+    
+    # If any issues exist, overall score cannot be 100.0
+    total_anomalies = len(issues)
+    if total_anomalies > 0 and overall >= 99.5:
+        overall = 99.0
     overall = round(overall, 1)
     completeness = round(completeness, 1)
     uniqueness = round(uniqueness, 1)

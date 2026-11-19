@@ -59,16 +59,19 @@ def detect_inconsistencies(df: pd.DataFrame) -> List[Dict[str, Any]]:
         variants_found = {}
         
         for idx, orig_val in city_series.items():
-            clean = orig_val.strip()
+            if pd.isna(orig_val):
+                continue
+            orig_str = str(orig_val)
+            clean = orig_str.strip()
             lower = clean.lower()
             if lower in ["", "nan", "null", "-", "?", "unknown", "not available", "none"]:
                 continue
             
             # Check if canonical exists and differed from exact official title
             canonical = CITY_CANONICAL.get(lower)
-            if canonical and orig_val != canonical:
+            if canonical and orig_str != canonical:
                 affected_rows.append(idx + 2)
-                variants_found[orig_val] = canonical
+                variants_found[orig_str] = canonical
                 
         if len(affected_rows) > 0:
             sample_examples = [f"'{orig}' → '{canon}'" for orig, canon in list(variants_found.items())[:6]]
@@ -95,7 +98,10 @@ def detect_inconsistencies(df: pd.DataFrame) -> List[Dict[str, Any]]:
         variants_found = {}
         
         for idx, orig_val in cat_series.items():
-            clean = orig_val.strip()
+            if pd.isna(orig_val):
+                continue
+            orig_str = str(orig_val)
+            clean = orig_str.strip()
             lower = clean.lower().replace("&", "and")
             if lower in ["", "nan", "null"]:
                 continue
@@ -114,9 +120,9 @@ def detect_inconsistencies(df: pd.DataFrame) -> List[Dict[str, Any]]:
             elif lower in ["beauty"]:
                 canon = "Beauty"
                 
-            if canon and orig_val != canon:
+            if canon and orig_str != canon:
                 affected_rows.append(idx + 2)
-                variants_found[orig_val] = canon
+                variants_found[orig_str] = canon
                 
         if len(affected_rows) > 0:
             sample_examples = [f"'{orig}' → '{canon}'" for orig, canon in list(variants_found.items())[:6]]
@@ -143,15 +149,18 @@ def detect_inconsistencies(df: pd.DataFrame) -> List[Dict[str, Any]]:
         variants_found = {}
         
         for idx, orig_val in pm_series.items():
-            clean = orig_val.strip()
+            if pd.isna(orig_val):
+                continue
+            orig_str = str(orig_val)
+            clean = orig_str.strip()
             lower = clean.lower()
             if lower in ["", "nan", "null"]:
                 continue
             
             canon = PAYMENT_CANONICAL.get(lower)
-            if canon and orig_val != canon:
+            if canon and orig_str != canon:
                 affected_rows.append(idx + 2)
-                variants_found[orig_val] = canon
+                variants_found[orig_str] = canon
                 
         if len(affected_rows) > 0:
             sample_examples = [f"'{orig}' → '{canon}'" for orig, canon in list(variants_found.items())[:6]]
@@ -248,17 +257,20 @@ def detect_inconsistencies(df: pd.DataFrame) -> List[Dict[str, Any]]:
         samples = []
         
         for idx, orig_val in name_series.items():
-            val = orig_val.strip()
+            if pd.isna(orig_val):
+                continue
+            orig_str = str(orig_val)
+            val = orig_str.strip()
             if val in ["", "nan", "null"]:
                 continue
             # Check abnormal spaces or all upper / all lower
-            has_extra_spaces = "  " in orig_val or orig_val != orig_val.strip()
+            has_extra_spaces = "  " in orig_str or orig_str != val
             is_all_upper = val.isupper() and len(val) > 3
             is_all_lower = val.islower() and len(val) > 3
             if has_extra_spaces or is_all_upper or is_all_lower:
                 affected_rows.append(idx + 2)
                 if len(samples) < 5:
-                    samples.append(f"Row {idx+2}: '{orig_val}' → '{val.title()}'")
+                    samples.append(f"Row {idx+2}: '{orig_str}' → '{val.title()}'")
                     
         if len(affected_rows) > 0:
             issues.append({
@@ -311,5 +323,51 @@ def detect_inconsistencies(df: pd.DataFrame) -> List[Dict[str, Any]]:
                 "recommendation": "Parse dates with format inference and standardize into ISO 8601 YYYY-MM-DD strings.",
                 "cleaning_code": f"df['{col}'] = pd.to_datetime(df['{col}'], errors='coerce').dt.strftime('%Y-%m-%d')"
             })
+
+    # 8. Generic String Inconsistencies for arbitrary columns in any uploaded CSV
+    handled_cols = {"city", "category", "payment_method", "phone", "email", "customer_name"}.union(set(date_cols))
+    for col in df.columns:
+        if col in handled_cols or any(k in col.lower() for k in ["id", "code", "hash"]):
+            continue
+        if df[col].dtype == object or str(df[col].dtype).startswith("str"):
+            series = df[col]
+            affected_rows = []
+            samples = []
+            casing_variants = {}
+            for idx, orig_val in series.items():
+                if pd.isna(orig_val):
+                    continue
+                orig_str = str(orig_val)
+                val = orig_str.strip()
+                if val.lower() in ["", "nan", "null", "-", "?", "none"]:
+                    continue
+                has_ws_error = ("  " in orig_str) or (orig_str != val)
+                norm = val.lower()
+                if norm not in casing_variants:
+                    casing_variants[norm] = val
+                elif casing_variants[norm] != val:
+                    has_ws_error = True
+                    
+                if has_ws_error:
+                    affected_rows.append(idx + 2)
+                    if len(samples) < 4:
+                        samples.append(f"Row {idx+2}: '{orig_str}'")
+                        
+            if 0 < len(affected_rows) <= int(len(df) * 0.9):
+                issues.append({
+                    "id": f"INCONSIST_TEXT_{col}_{uuid.uuid4().hex[:6]}",
+                    "category": "Inconsistent Values",
+                    "column_name": col,
+                    "severity": "Low",
+                    "issue_count": len(affected_rows),
+                    "affected_rows": affected_rows[:100],
+                    "total_affected_rows": len(affected_rows),
+                    "original_values": samples,
+                    "recommended_values": ["Standardized casing and trimmed whitespace"],
+                    "explanation": f"Column '{col}' exhibits {len(affected_rows)} records with casing discrepancies or untrimmed whitespace.",
+                    "business_impact": "Causes artificial grouping fragmentation in SQL aggregations and reporting filters.",
+                    "recommendation": "Trim leading/trailing whitespace and normalize text casing.",
+                    "cleaning_code": f"df['{col}'] = df['{col}'].astype(str).str.strip().str.title()"
+                })
 
     return issues

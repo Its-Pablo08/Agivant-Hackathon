@@ -108,41 +108,64 @@ def detect_outliers_and_anomalies(df: pd.DataFrame) -> List[Dict[str, Any]]:
                     })
 
     # 3. Statistical Numerical Outliers via IQR & Z-Score
-    for col in ["quantity", "unit_price", "total_amount", "delivery_days"]:
-        if col in df.columns:
-            s = pd.to_numeric(df[col].replace(["-", "?", "", "None", "null"], np.nan), errors="coerce").dropna()
-            if len(s) > 10:
-                q1 = float(s.quantile(0.25))
-                q3 = float(s.quantile(0.75))
-                iqr = q3 - q1
-                lower_bound = round(q1 - 1.5 * iqr, 2)
-                upper_bound = round(q3 + 1.5 * iqr, 2)
-                
-                # We identify values strictly outside IQR bounds (excluding negatives already flagged)
-                iqr_outlier_mask = (s > upper_bound)
-                outlier_count = int(iqr_outlier_mask.sum())
-                
-                # Check if extreme (e.g. quantity=120 when median is 2, or unit_price=124999 when median is 1199)
-                if outlier_count > 0 and (outlier_count / len(s) < 0.10):  # legitimate outliers are rare
-                    affected_indices = s[iqr_outlier_mask].index.tolist()
-                    affected_rows = [idx + 2 for idx in affected_indices]
-                    sample_vals = s[iqr_outlier_mask].sort_values(ascending=False).head(5).tolist()
-                    
-                    issues.append({
-                        "id": f"OUTLIER_STAT_{col}_{uuid.uuid4().hex[:6]}",
-                        "category": "Numerical Outliers & Impossible Values",
-                        "column_name": col,
-                        "severity": "Medium",
-                        "issue_count": outlier_count,
-                        "affected_rows": affected_rows[:100],
-                        "total_affected_rows": outlier_count,
-                        "original_values": [f"Value {v} (IQR Upper Bound: {upper_bound})" for v in sample_vals],
-                        "recommended_values": [f"Review potential high-value transactions or cap with winsorization"],
-                        "explanation": f"Column '{col}' exhibits {outlier_count} statistical outliers exceeding the upper IQR boundary of {upper_bound}. E.g. extreme values like {sample_vals[:3]}.",
-                        "business_impact": "Extreme values disproportionately pull arithmetic averages, distorting forecast models and typical customer basket size metrics.",
-                        "recommendation": "Do not delete blindly: evaluate whether these represent luxury goods/bulk orders or data entry keystroke slips.",
-                        "cleaning_code": f"# Check or cap upper outliers via winsorization\nupper_limit = df['{col}'].quantile(0.99)\n# df['{col}'] = df['{col}'].clip(upper=upper_limit)"
-                    })
+    # Evaluates all continuous numerical columns across any uploaded CSV dataset
+    numeric_candidate_cols = []
+    for col in df.columns:
+        if any(skip_kw in col.lower() for skip_kw in ["phone", "pincode", "zip", "code"]):
+            continue
+        try:
+            s_clean = pd.to_numeric(df[col].replace(["-", "?", "", "None", "null", "nan", "NaN"], np.nan), errors="coerce").dropna()
+            # Only continuous numeric with sufficient distinct values (avoid binary 0/1 or single-valued)
+            if len(s_clean) >= 10 and s_clean.nunique() > 2:
+                numeric_candidate_cols.append(col)
+        except:
+            pass
+
+    for col in numeric_candidate_cols:
+        s = pd.to_numeric(df[col].replace(["-", "?", "", "None", "null", "nan", "NaN"], np.nan), errors="coerce").dropna()
+        if len(s) < 10 or s.nunique() <= 2:
+            continue
+            
+        q1 = float(s.quantile(0.25))
+        q3 = float(s.quantile(0.75))
+        iqr = q3 - q1
+        if iqr <= 0:
+            continue
+            
+        lower_bound = round(q1 - 1.5 * iqr, 4)
+        upper_bound = round(q3 + 1.5 * iqr, 4)
+        
+        is_domain_order_col = col.lower() in ["quantity", "unit_price", "total_amount", "delivery_days", "rating"]
+        if is_domain_order_col:
+            # Positive upper outliers (negatives handled in Section 2)
+            iqr_outlier_mask = (s > upper_bound)
+        else:
+            # Two-sided standard statistical outliers
+            iqr_outlier_mask = (s < lower_bound) | (s > upper_bound)
+            
+        outlier_count = int(iqr_outlier_mask.sum())
+        
+        # Only report if outliers exist and are true anomalous outliers (<25% of dataset)
+        if 0 < outlier_count <= int(len(s) * 0.25):
+            affected_indices = s[iqr_outlier_mask].index.tolist()
+            affected_rows = [idx + 2 for idx in affected_indices]
+            sample_vals = s[iqr_outlier_mask].head(4).tolist()
+            
+            issues.append({
+                "id": f"OUTLIER_STAT_{col}_{uuid.uuid4().hex[:6]}",
+                "category": "Numerical Outliers & Impossible Values",
+                "column_name": col,
+                "severity": "Medium" if (outlier_count / len(s) < 0.10) else "High",
+                "issue_count": outlier_count,
+                "affected_rows": affected_rows[:100],
+                "total_affected_rows": outlier_count,
+                "original_values": [f"Value {v} (IQR Bounds: [{lower_bound}, {upper_bound}])" for v in sample_vals],
+                "recommended_values": [f"Cap values between {lower_bound} and {upper_bound} (Winsorization) or verify source sensor"],
+                "explanation": f"Column '{col}' exhibits {outlier_count} statistical outliers outside the 1.5 × IQR boundary [{lower_bound}, {upper_bound}]. Sample detected anomalies: {sample_vals[:3]}.",
+                "business_impact": "Extreme statistical outliers disproportionately pull arithmetic averages, distorting analytical models and downstream reporting.",
+                "recommendation": "Review whether these represent valid extreme tail events or sensor/instrumentation errors, and consider winsorization or robust scaling.",
+                "cleaning_code": f"# Apply winsorization to cap outliers to 1.5x IQR statistical boundaries\n# df['{col}'] = df['{col}'].clip(lower={lower_bound}, upper={upper_bound})"
+            })
 
     # 4. Impossible Dates (Invalid dates like 2026-02-30, and out-of-scope years like 1999 or 2027)
     date_cols = [c for c in df.columns if "date" in c.lower() or "time" in c.lower()]
