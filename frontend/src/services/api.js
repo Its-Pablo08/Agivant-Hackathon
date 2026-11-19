@@ -84,8 +84,13 @@ export const dataGuardAPI = {
     return response.data;
   },
 
-  updateGeminiKey: async (apiKey) => {
-    const response = await api.post('/settings/gemini-key', { api_key: apiKey });
+  updateGeminiKey: async (apiKey, model = 'gemini-2.0-flash') => {
+    const response = await api.post('/settings/gemini-key', { api_key: apiKey, model });
+    return response.data;
+  },
+
+  getAvailableModels: async () => {
+    const response = await api.get('/settings/models');
     return response.data;
   },
 

@@ -6,6 +6,16 @@ from ..core.config import settings
 
 logger = logging.getLogger(__name__)
 
+CANDIDATE_MODELS = [
+    "gemini-2.0-flash",
+    "gemini-2.5-flash",
+    "gemini-1.5-flash-latest",
+    "gemini-1.5-flash-8b",
+    "gemini-1.5-flash",
+    "gemini-1.5-pro",
+    "gemini-pro"
+]
+
 def generate_fallback_ai_explanations(
     columns_profile: List[Dict[str, Any]],
     issues: List[Dict[str, Any]],
@@ -20,7 +30,6 @@ def generate_fallback_ai_explanations(
         name = col["name"]
         stype = col.get("semantic_type", "text")
         
-        # Infer column domain meaning
         if "order_id" in name.lower():
             desc = "Unique business identifier for each customer transaction. Expected to be immutable and distinct."
         elif "date" in name.lower() or "time" in name.lower():
@@ -70,7 +79,7 @@ def generate_fallback_ai_explanations(
     # Executive Summary
     overall_score = quality_scores.get("overall_score", 0.0)
     grade = quality_scores.get("quality_grade", "Needs Improvement")
-    total_issues = sum(i["issue_count"] for i in issues)
+    total_issues = sum(i.get("issue_count", 0) for i in issues)
     
     executive_summary = (
         f"DataGuard AI completed an end-to-end automated data quality scan. "
@@ -99,6 +108,69 @@ def generate_fallback_ai_explanations(
         "prioritized_actions": prioritized_actions
     }
 
+def call_gemini_api(api_key: str, preferred_model: str, prompt: str) -> tuple[str, str]:
+    """
+    Attempts to call Google Gemini using the new google.genai SDK or legacy google.generativeai,
+    trying candidate models in priority order if the preferred model is not found (404).
+    Returns (response_text, actual_model_used).
+    """
+    models_to_try = [preferred_model] + [m for m in CANDIDATE_MODELS if m != preferred_model]
+    last_error = None
+
+    # 1. Try with new official google.genai SDK
+    try:
+        from google import genai
+        client = genai.Client(api_key=api_key.strip())
+        for model_name in models_to_try:
+            try:
+                response = client.models.generate_content(
+                    model=model_name,
+                    contents=prompt
+                )
+                if response and hasattr(response, "text") and response.text:
+                    return response.text, model_name
+            except Exception as err:
+                last_error = err
+                logger.warning(f"google.genai call to '{model_name}' failed: {err}")
+    except ImportError:
+        pass
+
+    # 2. Try with google.generativeai SDK
+    try:
+        import google.generativeai as legacy_genai
+        legacy_genai.configure(api_key=api_key.strip())
+        for model_name in models_to_try:
+            try:
+                model = legacy_genai.GenerativeModel(model_name)
+                response = model.generate_content(prompt)
+                if response and response.text:
+                    return response.text, model_name
+            except Exception as err:
+                last_error = err
+                logger.warning(f"legacy google.generativeai call to '{model_name}' failed: {err}")
+    except ImportError:
+        pass
+
+    raise RuntimeError(f"All Gemini models failed. Last error: {last_error}")
+
+def verify_gemini_connection(api_key: str, preferred_model: str = "gemini-2.0-flash") -> Dict[str, Any]:
+    """
+    Verifies that the provided API key works with Google Gemini, finding a supported model.
+    """
+    try:
+        text, working_model = call_gemini_api(api_key, preferred_model, "Reply with 'OK' only.")
+        return {
+            "status": "success",
+            "working_model": working_model,
+            "message": f"Successfully connected to Google Gemini ({working_model})!"
+        }
+    except Exception as e:
+        return {
+            "status": "warning",
+            "working_model": preferred_model,
+            "message": f"Test call returned: {str(e)}. Fallback engine will be active."
+        }
+
 def generate_ai_insights(
     columns_profile: List[Dict[str, Any]],
     issues: List[Dict[str, Any]],
@@ -107,41 +179,35 @@ def generate_ai_insights(
 ) -> Dict[str, Any]:
     """
     Calls Google Gemini API with structured summary data to generate business explanations
-    and verified cleaning snippets. Falls back to deterministic rule engine if API is unavailable.
+    and verified cleaning snippets. Automatically handles model versioning and fallbacks.
     """
     api_key = api_key_override or settings.GEMINI_API_KEY
     if not api_key or api_key.strip() == "" or api_key.strip() == "your_gemini_api_key_here":
         logger.info("Gemini API key not configured. Using high-fidelity rule-based explanation engine.")
         return generate_fallback_ai_explanations(columns_profile, issues, quality_scores)
 
-    try:
-        import google.generativeai as genai
-        genai.configure(api_key=api_key.strip())
-        model = genai.GenerativeModel(settings.GEMINI_MODEL)
-        
-        # Prepare lean payload (summaries only, no raw row dumps)
-        summary_payload = {
-            "columns": [{"name": c["name"], "type": c["semantic_type"], "missing_pct": c["missing_percentage"], "samples": c["sample_distinct"][:5]} for c in columns_profile],
-            "scores": {
-                "overall": quality_scores.get("overall_score"),
-                "completeness": quality_scores.get("completeness_score"),
-                "uniqueness": quality_scores.get("uniqueness_score"),
-                "validity": quality_scores.get("validity_score"),
-                "consistency": quality_scores.get("consistency_score")
-            },
-            "detected_issues_summary": [
-                {
-                    "category": i["category"],
-                    "column": i["column_name"],
-                    "severity": i["severity"],
-                    "count": i["issue_count"],
-                    "sample_values": i.get("original_values", [])[:3]
-                }
-                for i in issues[:12]
-            ]
-        }
-        
-        prompt = f"""
+    summary_payload = {
+        "columns": [{"name": c["name"], "type": c["semantic_type"], "missing_pct": c["missing_percentage"], "samples": c["sample_distinct"][:5]} for c in columns_profile],
+        "scores": {
+            "overall": quality_scores.get("overall_score"),
+            "completeness": quality_scores.get("completeness_score"),
+            "uniqueness": quality_scores.get("uniqueness_score"),
+            "validity": quality_scores.get("validity_score"),
+            "consistency": quality_scores.get("consistency_score")
+        },
+        "detected_issues_summary": [
+            {
+                "category": i["category"],
+                "column": i["column_name"],
+                "severity": i["severity"],
+                "count": i["issue_count"],
+                "sample_values": i.get("original_values", [])[:3]
+            }
+            for i in issues[:12]
+        ]
+    }
+    
+    prompt = f"""
 You are DataGuard AI, a Principal Data Quality Architect and Senior Data Scientist.
 Analyze this dataset quality scan summary and generate structured executive intelligence.
 
@@ -162,8 +228,9 @@ Respond with STRICT VALID JSON ONLY (no markdown fences, no conversational prose
   ]
 }}
 """
-        response = model.generate_content(prompt)
-        text = response.text.strip()
+    try:
+        raw_text, used_model = call_gemini_api(api_key, settings.GEMINI_MODEL, prompt)
+        text = raw_text.strip()
         
         # Strip markdown fences if present
         if text.startswith("```json"):
@@ -193,7 +260,7 @@ Respond with STRICT VALID JSON ONLY (no markdown fences, no conversational prose
             
         return {
             "source": "gemini_api",
-            "model": settings.GEMINI_MODEL,
+            "model": used_model,
             "column_explanations": parsed.get("column_explanations", {}),
             "enhanced_issues": enhanced_issues,
             "executive_summary": parsed.get("executive_summary", ""),

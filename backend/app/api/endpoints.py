@@ -15,7 +15,7 @@ from ..services.duplicates import detect_duplicates
 from ..services.outliers import detect_outliers_and_anomalies
 from ..services.inconsistencies import detect_inconsistencies
 from ..services.scoring import calculate_quality_scores
-from ..services.ai_engine import generate_ai_insights, generate_fallback_ai_explanations
+from ..services.ai_engine import generate_ai_insights, generate_fallback_ai_explanations, verify_gemini_connection, CANDIDATE_MODELS
 from ..services.cleaning import preview_cleaning_operation, apply_cleaning_pipeline
 from ..services.report_generator import generate_pdf_report, export_issues_to_csv, export_analysis_to_json
 from ..schemas.responses import CleanRequest, CleanPreviewRequest, GeminiKeyRequest, ExplainRequest
@@ -396,25 +396,62 @@ def get_settings_status():
         "gemini_configured": has_key,
         "masked_key": masked_key,
         "model": settings.GEMINI_MODEL,
-        "fallback_available": True
+        "fallback_available": True,
+        "available_models": CANDIDATE_MODELS
+    }
+
+@router.get("/settings/models")
+def get_available_models():
+    """
+    Returns supported Gemini models list.
+    """
+    return {
+        "models": CANDIDATE_MODELS,
+        "active_model": settings.GEMINI_MODEL
     }
 
 @router.post("/settings/gemini-key")
 def update_gemini_key(req: GeminiKeyRequest):
     """
-    Updates Gemini API key dynamically at runtime.
+    Updates Gemini API key and model dynamically at runtime and persists to .env.
     """
     key = req.api_key.strip()
     if not key:
         raise HTTPException(status_code=400, detail="API key cannot be empty.")
+    
+    preferred_model = req.model.strip() if req.model and req.model.strip() else "gemini-2.0-flash"
     settings.GEMINI_API_KEY = key
     
-    # Test key
+    # Test connection and find working model
+    res = verify_gemini_connection(key, preferred_model)
+    working_model = res.get("working_model", preferred_model)
+    settings.GEMINI_MODEL = working_model
+    
+    # Persist to backend/.env
+    env_file = settings.BASE_DIR / "backend" / ".env"
     try:
-        import google.generativeai as genai
-        genai.configure(api_key=key)
-        model = genai.GenerativeModel(settings.GEMINI_MODEL)
-        resp = model.generate_content("Ping")
-        return {"status": "success", "message": "Google Gemini API key verified and saved successfully!"}
-    except Exception as e:
-        return {"status": "warning", "message": f"Key saved, but test call returned: {str(e)}. Fallback engine will be active if needed."}
+        env_lines = []
+        if env_file.exists():
+            with open(env_file, "r", encoding="utf-8") as f:
+                for line in f:
+                    if line.startswith("GEMINI_API_KEY="):
+                        env_lines.append(f"GEMINI_API_KEY={key}\n")
+                    elif line.startswith("GEMINI_MODEL="):
+                        env_lines.append(f"GEMINI_MODEL={working_model}\n")
+                    else:
+                        env_lines.append(line)
+        else:
+            env_lines = [
+                f"GEMINI_API_KEY={key}\n",
+                f"GEMINI_MODEL={working_model}\n"
+            ]
+        with open(env_file, "w", encoding="utf-8") as f:
+            f.writelines(env_lines)
+    except Exception as err:
+        logger.warning(f"Could not write to backend/.env: {err}")
+
+    return {
+        "status": res["status"],
+        "message": res["message"],
+        "working_model": working_model
+    }
