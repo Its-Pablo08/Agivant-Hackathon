@@ -17,70 +17,97 @@ import dataGuardAPI from '../services/api';
 
 const AVAILABLE_OPERATIONS = [
   {
+    id: 'impute_missing_values',
+    title: '1. Impute Missing & Placeholder Values (Universal)',
+    desc: 'Imputes all empty cells, nulls, and placeholder strings (median for numericals like salary/price, 0 for unplaced status, mode/Unknown for categoricals).',
+    category: 'Missing Values'
+  },
+  {
+    id: 'winsorize_iqr_outliers',
+    title: '2. Winsorize & Cap Statistical Outliers (Universal)',
+    desc: 'Clips extreme continuous values outside 1.5× IQR boundaries to statistical upper and lower thresholds across all numerical columns.',
+    category: 'Outliers & Math'
+  },
+  {
     id: 'deduplicate_exact',
-    title: '1. Remove Exact Duplicate Rows',
+    title: '3. Remove Exact Duplicate Rows',
     desc: 'Eliminates 100% duplicate row copies while keeping the first recorded instance.',
     category: 'Duplicates'
   },
   {
+    id: 'deduplicate_business_keys',
+    title: '4. Resolve Primary Identifier Duplicates',
+    desc: 'Resolves duplicate order IDs, candidate serial numbers, and repeated transaction signatures.',
+    category: 'Duplicates'
+  },
+  {
     id: 'fix_arithmetic_totals',
-    title: '2. Correct Arithmetic Mismatches in Total Amount',
+    title: '5. Correct Arithmetic Mismatches in Total Amount',
     desc: 'Recomputes total_amount = quantity * unit_price where blank or calculated incorrectly.',
     category: 'Outliers & Math'
   },
   {
     id: 'standardize_cities',
-    title: '3. Standardize City Names & Official Designations',
+    title: '6. Standardize City Names & Official Designations',
     desc: 'Maps obsolete names (Bombay->Mumbai, Bangalore->Bengaluru, Madras->Chennai, Calcutta->Kolkata, Gurgaon->Gurugram) and strips irregular whitespace.',
     category: 'Inconsistencies'
   },
   {
     id: 'standardize_categories',
-    title: '4. Harmonize Product Category Taxonomy',
+    title: '7. Harmonize Product Category Taxonomy',
     desc: 'Corrects singular/plural forms (Book->Books, Electronic->Electronics) and casing (SPORTS->Sports, home & kitchen).',
     category: 'Inconsistencies'
   },
   {
     id: 'standardize_payment_methods',
-    title: '5. Standardize Payment Gateway Terms',
+    title: '8. Standardize Payment Gateway Terms',
     desc: 'Normalizes abbreviations: COD / C.O.D -> Cash on Delivery, CC / CreditCard -> Credit Card, netbanking -> Net Banking.',
     category: 'Inconsistencies'
   },
   {
     id: 'clean_phones',
-    title: '6. Sanitize Phone Numbers to 10-Digit Mobile',
+    title: '9. Sanitize Phone Numbers to 10-Digit Mobile',
     desc: 'Strips country codes (+91), hyphens, negative signs, and scientific notation to produce clean mobile numbers.',
     category: 'Inconsistencies'
   },
   {
     id: 'clean_names',
-    title: '7. Title-Case & Clean Customer Names',
+    title: '10. Title-Case & Clean Person / Customer Names',
     desc: 'Fixes ALL-CAPS names, lowercase names, and collapses multiple whitespace characters into clean single spaces.',
     category: 'Inconsistencies'
   },
   {
     id: 'clean_emails',
-    title: '8. Fix Email Syntax Typos',
+    title: '11. Fix Email Syntax Typos',
     desc: 'Replaces double @@ with @, double dots with single dot, and removes trailing spaces from email addresses.',
     category: 'Inconsistencies'
   },
   {
     id: 'standardize_dates',
-    title: '9. Standardize Dates to ISO 8601 (YYYY-MM-DD)',
+    title: '12. Standardize Dates to ISO 8601 (YYYY-MM-DD)',
     desc: 'Converts mixed date formats (M/D/YYYY, 28-Aug-26) to standard YYYY-MM-DD and fixes non-existent 2026-02-30 calendar dates.',
     category: 'Inconsistencies'
   },
   {
     id: 'clamp_ratings',
-    title: '10. Enforce Customer Rating Scale [1 - 5]',
+    title: '13. Enforce Customer Rating Scale [1 - 5]',
     desc: 'Clamps anomalous ratings like 0 or 10 into the valid 1-to-5 star business scale.',
     category: 'Outliers & Math'
+  },
+  {
+    id: 'trim_all_text',
+    title: '14. Trim Whitespace & Normalize Casing (All Columns)',
+    desc: 'Collapses extra spaces, strips leading/trailing whitespace, and standardizes text across all columns.',
+    category: 'Inconsistencies'
   }
 ];
 
 export default function CleaningPage({ activeDataset, onDownloadCleaned }) {
   const [selectedOps, setSelectedOps] = useState([
+    'impute_missing_values',
+    'winsorize_iqr_outliers',
     'deduplicate_exact',
+    'deduplicate_business_keys',
     'fix_arithmetic_totals',
     'standardize_cities',
     'standardize_categories',
@@ -89,7 +116,8 @@ export default function CleaningPage({ activeDataset, onDownloadCleaned }) {
     'clean_names',
     'clean_emails',
     'standardize_dates',
-    'clamp_ratings'
+    'clamp_ratings',
+    'trim_all_text'
   ]);
   const [previewData, setPreviewData] = useState(null);
   const [previewingOp, setPreviewingOp] = useState(null);

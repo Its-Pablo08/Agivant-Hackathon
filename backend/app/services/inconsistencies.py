@@ -187,7 +187,10 @@ def detect_inconsistencies(df: pd.DataFrame) -> List[Dict[str, Any]]:
         samples = []
         
         for idx, orig_val in phone_series.items():
-            val = orig_val.strip()
+            if pd.isna(orig_val):
+                continue
+            orig_str = str(orig_val)
+            val = orig_str.strip()
             if val in ["", "nan", "null"]:
                 continue
             # Standard Indian mobile: 10 digits starting with 6, 7, 8, or 9
@@ -222,7 +225,10 @@ def detect_inconsistencies(df: pd.DataFrame) -> List[Dict[str, Any]]:
         email_regex = re.compile(r"^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$")
         
         for idx, orig_val in email_series.items():
-            val = orig_val.strip()
+            if pd.isna(orig_val):
+                continue
+            orig_str = str(orig_val)
+            val = orig_str.strip()
             if val in ["", "nan", "null"]:
                 continue
             has_error = False
@@ -297,7 +303,10 @@ def detect_inconsistencies(df: pd.DataFrame) -> List[Dict[str, Any]]:
         samples = []
         
         for idx, orig_val in date_series.items():
-            val = orig_val.strip()
+            if pd.isna(orig_val):
+                continue
+            orig_str = str(orig_val)
+            val = orig_str.strip()
             if val in ["", "nan", "null", "-", "?"]:
                 continue
             # Expected standard format is YYYY-MM-DD
