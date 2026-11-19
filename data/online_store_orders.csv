@@ -1,0 +1,501 @@
+order_id,order_date,customer_name,email,phone,city,category,quantity,unit_price,total_amount,payment_method,delivery_days,rating
+O-10001,8/11/2026,Kabir Bose,kabir.bose4@example.org,7410804057,Pune,Books,3,599,1797,UPI,2,
+O-10002,7/17/2026,Ishaan Mehta,ishaan.mehta42@example.org,7787366747,Mumbai,Books,1,124999,124999,UPI,6,5
+O-10003,6/27/2026,Krishna Ansari,krishna.ansari30@example.com,6119602780,Pune,Beauty,3,1199,1199,UPI,2,4
+O-10004,6/27/2026,Siddharth Iyer,siddharth.iyer54@example.net,6756896516,not available,Home & Kitchen,1,949,949,Debit Card,5,5
+O-10005,3/1/2026,Rahul Mishra,rahul.mishra37@example.org,8568306866,Kolkata,Beauty,3,649,1947,Debit Card,4,5
+O-10006,9/15/2026,Saanvi Jain,saanvi.jain67@example.net,9252845618,Ahmedabad,Home & Kitchen,3,2299,6897,Credit Card,4,3
+O-10007,3/7/2026,Kabir Ansari,kabir.ansari3@example.net,6885893832,Chennai,Fashion,1,999,999,Debit Card,3,4
+O-10008,9/12/2026,Vivaan Deshpande,vivaan.deshpande26@example.org,6129110285,Chennai,Electronic,2,1399,2798,Credit Card,6,4
+O-10009,8/23/2026,Divya Fernandes,divya.fernandes55@example.com,8343817216,Lucknow,Beauty,1,599,599,Debit Card,2,4
+O-10010,9/13/2026,Suresh Bose,suresh.bose5@example.com,8549352975,Mumbai,Electronics,1,2399,2399,Cash on Delivery,2,
+O-10011,10/29/2026,Kavya Agarwal,kavya.agarwal62@example.net,8479783768,Chennai,Beauty,2,1249,2498,UPI,5,2
+O-10012,7/5/2026,Nikhil Menon,nikhil.menon15@example.com,8921236360,Chennai,Fashion,1,1199,1199,Debit Card,3,3
+O-10013,7/12/2026,Joseph Khan,joseph.khan33@example.com,7004876452,Kochi,Electronics,2,1949,3898,Debit Card,4,
+O-10014,4/2/2026,Arif Gill,arif.gill79@example.net,6252016128,Jaipur,Home & Kitchen,1,1799,1799,Credit Card,4,
+O-10015,7/11/2026,Sneha Mukherjee,sneha.mukherjee97@example.net,6586627125,Pune,Fashion,1,1899,1899,Cash on Delivery,2,5
+O-10016,4/5/2026,Nisha D'Souza,nisha.dsouza41@example.com,8190470876,Ahmedabad,Electronics,1,1049,1049,Cash on Delivery,2,5
+O-10017,1/24/2026,Sneha Sandhu,sneha.sandhu44@example.com,6314503784, kolkata,Beauty,2,849,1698,UPI,6,5
+O-10018,27/05/2026,Ananya Choudhary,ananya.choudhary10@example.com,8249188478,Bengaluru,Electronics,3,3549,10647,UPI,3,4
+O-10019,6/13/2026,Ananya Choudhary,ananya.choudhary10@example.com,8249188478,Bengaluru,Electronics,2,1399,2798,COD,2,5
+O-10020,2/9/2026,Gurpreet Joshi,gurpreet.joshi11@example.org,9898210460,Delhi,Electronics,3,2599,7797,UPI,1,5
+O-10021,5/18/2026,Divya Fernandes,divya.fernandes55@example.com,8343817216,Lucknow,Fashion,3,1449,4347,Net Banking,2,4
+O-10022,2/27/2026,Arif Rao,arif.rao6@example.org,6737028382,Delhi,Fashion,2,1249,2498,Credit Card,7,4
+O-10023,7/4/2026,Aadhya Choudhary,aadhya.choudhary84@example.org,7071013627,Mumbai,Fashion,2,1299,2598,Credit Card,4,
+O-10024,8/28/2026,Diya Bose,diya.bose46@example.org,6271052865,Pune,Electronics,1,3999,3999,Cash on Delivery,3,
+O-10025,7/25/2026,Neha Iyer,neha.iyer57@example.net,9094098584,Jaipur,Sports,1,1199,1199,Credit Card,3,4
+O-10026,9/6/2026,Ananya Sandhu,ananya.sandhu94@example.net,7108357999,Lucknow,Home & Kitchen,1,1649,1649,UPI,2,4
+O-10027,9/9/2026,Ananya Kulkarni,ananya.kulkarni29@example.net,8042947478,Pune,Home & Kitchen,2,2149,4298,UPI,4,4
+O-10028,9/24/2026,Neha Mehta,neha.mehta10@example.com,6168445584,Kolkata,Sports,2,1299,2598,debit card,6,5
+O-10029,4/4/2026,Venkat Banerjee,venkat.banerjee27@example.org,9258444193,Mumbai,Home & Kitchen,2,899,1798,UPI,3,3
+O-10030,6/7/2026,Varun Ansari,varun.ansari10@example.net,8442014613,Kolkata,Books,2,249,498,UPI,3,4
+O-10031,2/11/2026,Kavya Chatterjee,kavya.chatterjee83@example.org,7710512983,Ahmedabad,Electronics,2,799,1598,Debit Card,4,2
+O-10032,10/15/2026,Gurpreet Jain,gurpreet.jain47@example.net,9169871689,Jaipur,Fashion,2,1199,2398,UPI,1,5
+O-10033,5/2/2026,Aditya Pillai,aditya.pillai91@example.org,6780578037,Mumbai,Electronics,3,1999,5997,Cash on Delivery,4,5
+O-10034,10/6/2026,Priya Sharma,priya.sharma39@example.com,8178013325,Jaipur,Electronics,1,2499,2499,UPI,2,5
+O-10035,7/10/2026,Fatima Chatterjee,fatima.chatterjee72@example.org,7949482141,Gurugram,Fashion,1,1299,1299,UPI,5,5
+O-10036,2/14/2026,Nisha Patil,nisha.patil17@example.net,7202269780,Bengaluru,Home & Kitchen,2,1349,2698,Net Banking,3,3
+O-10037,2/20/2026,Nisha Patil,nisha.patil17@example.net,7202269780,,Sports,1,2599,2599,UPI,4,3
+O-10038,9/7/2026,Manav Sharma,manav.sharma47@example.net,7468542427,Hyderabad  ,Fashion,1,1899,1899,Cash on Delivery,7,5
+O-10039,9/5/2026,Aadhya Choudhary,aadhya.choudhary84@example.org,7071013627,Mumbai,Beauty,1,1149,1149,Net Banking,6,5
+O-10040,6/22/2026,Imran Rao,imran.rao11@example.net,8842108394,Chennai,Fashion,1,599,599,Cash on Delivery,3,5
+O-10041,7/12/2026,Diya Mehta,diya.mehta41@example.net,9428435281,Delhi,Electronics,1,3049,3049,UPI,4,5
+O-10042,1/24/2026,Venkat Gupta,venkat.gupta81@example.org,7188904995,Delhi,Beauty,1,349,349,Debit Card,4,5
+O-10043,9/2/2026,Kavya Chatterjee,kavya.chatterjee83@example.org,7710512983,Ahmedabad,Fashion,1,1599,1599,UPI,4,5
+O-10044,6/12/2026,Divya Patil,divya.patil41@example.net,6659397615,Jaipur,Sports,1,1899,1899,Debit Card,1,4
+O-10045,10/26/2026,Vivaan Rao,vivaan.rao97@example.org,7207016929,Hyderabad,Electronics,1,2749,2749,UPI,6,3
+O-10046,8/11/2026,Suresh D'Souza,suresh.dsouza39@example.org,78572-99584,Jaipur,Home & Kitchen,3,2099,6297,Credit Card,2,
+O-10047,8/26/2026,Arif Rao,arif.rao6@example.org,6737028382,Delhi,SPORTS,1,849,849,Debit Card,4,4
+O-10048,8/10/2026,Ananya Choudhary,ananya.choudhary89@example.org,7837929841,Bengaluru,Electronics,3,2649,7947,UPI,1,4
+O-10049,6/20/2026,Manav Nair,manav.nair35@example.net,8480594980,Pune,Beauty,3,399,1197,UPI,4,2
+O-10050,4/3/2026,Ishita Jain,ishita.jain96@example.net,7782760821,Kolkata,Home & Kitchen,3,2949,8847,UPI,4,2
+O-10051,5/10/2026,Ishaan Shah,ishaan.shah54@example.net,6330428451,Delhi,Beauty,1,1399,1399,Debit Card,3,5
+O-10052,10/2/2026,Arif Patil,arif.patil16@example.net,6363343701,Mumbai,Home & Kitchen,1,2099,2099,C.O.D,3,2
+O-10053,9/25/2026,Karan Gupta,karan.gupta90@example.net,9186694155,Ahmedabad,Sports,2,1049,2098,UPI,6,5
+O-10150,6/1/2026,  arif ansari,arif.ansari70@example.com,6543161030,Mumbai,Home & Kitchen,1,2499,2499,UPI,3,4
+O-10055,6/25/2026,Fatima Kumar,fatima.kumar81@example.com,6701478499,Kolkata,Fashion,1,1199,1199,UPI,4,5
+O-10056,1/13/2026,Divya Iyer,divya.iyer71@example.org,8522250435,Mumbai,Books,2,549,1098,Debit Card,4,2
+O-10057,2/22/2026,Tanvi Nair ,tanvi.nair89@example.net,9641220284,Chennai,Books,2,449,898,UPI,3,5
+O-10058,1/18/2026,Neha Iyer,neha.iyer57@example.net,9094098584,Jaipur,Fashion,1,1349,2349,UPI,4,3
+O-10059,2/26/2026,Manav Sharma,manav.sharma47@example.net,7468542427,Hyderabad,Fashion,1,2449,2449,UPI,4,
+O-10060,5/7/2026,Priya Chatterjee,priya.chatterjee33@example.com,8309642824,Gurugram,Fashion,1,1549,1549,UPI,5,4
+O-10061,7/23/2026,Imran Pandey,imran.pandey81@example.com,9354011527,Kolkata,Sports,1,3299,3299,Debit Card,3,4
+O-10062,4/20/2026,Shreya Das,shreya.das60@example.org,6950601889,Kolkata,Fashion,1,1749,1749,Net Banking,2,3
+O-10063,10/25/2026,Fatima Deshpande,fatima.deshpande63@example.com,7409839439,Bengaluru,Fashion,1,1249,1249,UPI,2,4
+O-10064,4/21/2026,Vivaan Pillai,vivaan.pillai96@example.net,9496224590,Mumbai,Home & Kitchen,2,1199,2398,Credit Card,3,5
+O-10065,8/29/2026,Reyansh Reddy,reyansh.reddy84@example.com,8304907418,Delhi,Beauty,1,849,849,UPI,1,
+O-10066,3/5/2026,Kavya Kumar,kavya.kumar2@example.net,6483354148,Chennai,Electronics,1,3249,3249,UPI,4,
+O-10067,7/20/2026,Sneha Nair,sneha.nair88@example.net,7781206176,Kolkata,Fashion,1,1749,1749,Debit Card,3,3
+O-10068,8/27/2026,Saanvi Patel,saanvi.patel72@example.org,7801253739,Kolkata,Fashion,2,949,1898,Credit Card,3,4
+O-10069,3/25/2026,Kavya Mehta,kavya.mehta79@example.org,8309552111,Ahmedabad,Books,1,549,549,Debit Card,3,
+O-10070,7/28/2026,Pooja Kumar,pooja.kumar78@example.net,9101019544,Bengaluru,Electronics,1,2699,2699,UPI,1,5
+O-10071,7/6/2026,Diya Mishra,diya.mishra46@example.com,6431634999,Delhi,Electronics,1,2749,2749,UPI,5,4
+O-10072,4/3/2026,Kavya Kumar,kavya.kumar2@example.net,6483354148,Chennai,Electronics,1,3349,3349,Net Banking,4,3
+O-10073,3/23/2026,Gurpreet Choudhary,gurpreet.choudhary36@example.com,6397415050,mumbai ,Sports,1,749,749,UPI,6,4
+O-10074,6/23/2026,Pooja Banerjee,pooja.banerjee74@example.org,9179785575,Bengaluru,Electronics,1,2849,2849,Cash on Delivery,2,4
+O-10075,10/21/2026,Dhruv Agarwal,dhruv.agarwal35@example.net,9164252477,Gurugram,Sports,1,1149,1149,Credit Card,4,3
+O-10076,6/23/2026,Anjali Mehta,anjali.mehta18@example.org,6470675548,Lucknow,Books,1,399,399,Credit Card,5,5
+O-10386,9/18/2026,Venkat Gill,venkat.gill68@example.org,7352401376,Mumbai,Beauty,1,549,549,Credit Card,2,5
+O-10078,6/24/2026,Sneha Patel,sneha.patel14@example.com,6524900751,,Fashion,3,799,799,Net Banking,3,
+O-10079,10/24/2026,Aryan Shah,aryan.shah88@example.com,8218549145,Delhi,Home & Kitchen,2,1749,3498,Credit Card,2,
+O-10080,3/4/2026,Anjali D'Souza,anjali.dsouza26@example.com,9653989974,Pune,Home & Kitchen,3,799,2397,UPI,3,4
+O-10081,5/19/2026,Tanvi Pillai,tanvi.pillai48@example.com,9675347897,Mumbai,ELECTRONICS,2,2099,4198,Net Banking,2,3
+O-10082,2/13/2026,Neha Reddy,neha.reddy69@example.org,9204533161,Chennai,Home & Kitchen,1,1149,1149,Cash on Delivery,2,4
+O-10083,7/10/2026,Zoya Verma,zoya.verma66@example.net,6644132076,Bangalore,Fashion,2,-499,-998,UPI,3,5
+O-10084,5/14/2026,Tanvi Nair,tanvi.nair89@example.net,9641220284,Chennai,Fashion,1,599,599,Credit Card,3,5
+O-10085,4/21/2026,Aryan Patel,aryan.patel60@example.com,7613873037,Bengaluru,Fashion,2,1499,,UPI,2,5
+O-10086,4/26/2026,Rohan Deshpande,rohan.deshpande71@example.com,7579781768,Hyderabad,Fashion,2,1049,2098,Debit Card,2,5
+O-10087,6/30/2026,Imran Rao,imran.rao11@example.net,8842108394,Chennai,Fashion,2,849,1698,Cash on Delivery,3,2
+O-10088,5/17/2026,Anjali D'Souza,anjali.dsouza26@example.com,9653989974,Pune,Home & Kitchen,1,1599,1599,UPI,3,2
+O-10089,3/6/2026,Nisha Iyer,nisha.iyer66@example.net,8642894298,Lucknow,Home & Kitchen,2,1899,3798,Net Banking,2,4
+O-10090,3/15/2026,Neha Sandhu,neha.sandhu10@example.net,9316489198,Kolkata,Electronics,1,1399,1399,UPI,2,
+O-10091,5/14/2026,Sai Jain,sai.jain14@example.net,9539210254,Chennai,Beauty,2,549,1098,Debit Card,3,3
+O-10092,5/24/2026,Rahul Joshi,rahul.joshi80@example.net,9704410475,Pune,Beauty,1,1049,1049,Credit Card,4,5
+O-10093,28/03/2026,Diya Kulkarni,diya.kulkarni88@example.net,9908454338,Kolkata,Home & Kitchen,2,1199,2398,Debit Card,2,
+O-10094,10/19/2026,Manav Sharma,manav.sharma47@example.net,7468542427,Hyderabad,Beauty,2,799,1598,Cash on Delivery,3,4
+O-10095,7/3/2026,Yash Patil,yash.patil1@example.org,0,Chennai,Electronics,1,2199,2199,Credit Card,7,5
+O-10096,9/1/2026,Riya Choudhary,riya.choudhary45@example.com,6621446134,Ahmedabad,Sports,2,949,1898,UPI,5,
+O-10097,5/2/2026,Neha Mishra,neha.mishra68@example.com,7472855689,Pune,Beauty,2,799,1598,UPI,3,5
+O-10098,4/28/2026,Pranav Reddy,pranav.reddy3@example.net,9941655728,Bengaluru,Fashion,1,2399,2399,Credit Card,3,4
+O-10099,2/19/2026,Aditya Pillai,aditya.pillai91@example.org,6780578037,Mumbai,Home & Kitchen,2,1649,3298,Net Banking,4,
+O-10100,5/30/2026,Anjali Sandhu,anjali.sandhu87@example.org,8326270586,Ahmedabad,Fashion,2,1599,3198,Cash on Delivery,4,5
+O-10101,2/17/2026,Sai Jain,sai.jain39@example.com,7993215711,Bangalore,Electronics,2,1199,2398,Credit Card,3,5
+O-10102,2/2/2026,Siddharth Banerjee,siddharth.banerjee37@example.net,8451995593,Pune,Fashion,2,64999,129998,Debit Card,4,5
+O-10103,4/8/2026,Meera Mishra,meera.mishra63@example.org,7854015672,Mumbai,Fashion,2,1299,2598,UPI,4,5
+O-10104,1/2/2026,Vivaan Shah,vivaan.shah57@example.com,7927330570,Delhi,Fashion,2,2499,4998,Debit Card,5,4
+O-10105,10/18/2026,Arif Reddy,arif.reddy99@example.org,7853959893,-,Books,1,449,449,UPI,2,4
+O-10106,6/27/2026,Rahul Pillai,rahul.pillai13@example.com,6454945997,Mumbai,Electronics,2,1999,3998,Net Banking,4,1
+O-10107,6/7/2026,Pooja Sandhu,,7440029787,Bengaluru,Fashion,2,1449,2898,Debit Card,4,2
+O-10108,4/3/2026,Nikhil Khan,nikhil.khan98@example.org,9953432746,Jaipur,Fashion,2,799,1598,Debit Card,7,5
+O-10109,8/20/2026,Diya Mishra,diya.mishra97@example.org,7271633928,Bengaluru,Home & Kitchen,1,1949,1949,UPI,4,5
+O-10110,5/16/2026,Dhruv Banerjee,dhruv.banerjee39@example.org,9177483640,Ahmedabad,Home & Kitchen,2,799,1598,Debit Card,5,3
+O-10111,8/21/2026,Kavya Agarwal,kavya.agarwal69@example.org,7811265844,Mumbai,Sports,1,2849,2849,Debit Card,7,3
+O-10112,5/2/2026,Siddharth Iyer,siddharth.iyer54@example.net,6756896516,pune,Electronics,1,2699,2699,UPI,4,5
+O-10113,4/11/2026,Arif Reddy,arif.reddy99@example.org,7853959893,,Books,3,649,1947,Credit Card,5,3
+O-10114,9/17/2026,Joseph Khan,joseph.khan33@example.com,7004876452,Kochi,Beauty,1,649,649,Debit Card,6,2
+O-10115,9/23/2026,Nisha Singh,nisha.singh64@example.org,7039622098,Lucknow,Books,1,299,299,Credit Card,3,4
+O-10116,3/14/2026,Gurpreet Mishra,gurpreet.mishra34@example.net,7671475136,Mumbai,Beauty,2,649,1298,UPI,5,5
+O-10117,7/5/2026,Vivaan Choudhary,vivaan.choudhary28@example.net,6872438546,Jaipur,Fashion,3,1399,4197,UPI,4,5
+O-10118,5/12/2026,Manav Banerjee,manav.banerjee33@example.net,8370500620,Gurugram,Books,3,399,1197,Credit Card,6,
+O-10119,5/29/2026,Sai Jain,sai.jain39@example.com,7993215711,Bengaluru,Fashion,2,1099,2198,Credit Card,5,
+O-10120,1/25/2026,Aryan Iyer,aryan.iyer76@example.net,9628360161,Mumbai,Beauty,3,649,1947,UPI,7,5
+O-10121,1/25/2026,Diya D'Souza,diya.dsouza34@example.org,7338792687,Hyderabad,Electronics,2,2099,4198,Cash on Delivery,2,5
+O-10122,9/15/2026,Sneha Mukherjee,sneha.mukherjee97@example.net,6586627125,Pune,Home & Kitchen,2,1849,3698,UPI,5,4
+O-10123,2/13/2026,Riya Choudhary,riya.choudhary45@example.com,6621446134,?,Electronics,3,4299,12897,UPI,7,4
+O-10124,10/31/2026,Nisha Iyer,nisha.iyer66@example.net,8642894298,Lucknow,Sports,1,1249,1249,Debit Card,2,6
+O-10125,1/25/2026,Nikhil Singh,nikhil.singh48@example.com,91676505,Bengaluru,Home & Kitchen,2,1049,2098,Cash on Delivery,5,4
+O-10126,7/9/2026,Diya Mishra,diya.mishra46@example.com,6431634999,Delhi,Sports,1,2949,2949,Cash on Delivery,4,5
+O-10127,28-Aug-26,Rahul Pillai,rahul.pillai13@example.com,6454945997,Mumbai,Fashion,1,799,799,Credit Card,5,4
+O-10128,7/12/2026,Aadhya Sharma,aadhya.sharma21@example.com,8205114829,,Home & Kitchen,1,1199,1199,UPI,6,4
+O-10129,9/10/2026,Imran Pandey,imran.pandey54@example.net,6364270575,Bengaluru,Books,3,399,1197,UPI,2,5
+O-10130,7/31/2026,Siddharth Banerjee,siddharth.banerjee37@example.net,8451995593,Pune,Beauty,1,399,399,Debit Card,4,3
+O-10131,1/10/2026,Simran Sandhu,simran.sandhu47@example.com,7257192948,Mumbai,Fashion,2,1449,2898,UPI,5,2
+O-10132,5/8/2026,Anjali Mehta,anjali.mehta18@example.org,6470675548,Lucknow,Beauty,1,0,0,Cash on Delivery,3,2
+O-10133,6/20/2026,Aadhya Khan,aadhya.khan69@example.com,6670907276,Mumbai,Beauty,1,349,349,Debit Card,2,4
+O-10134,7/3/2026,Tanvi Pillai,tanvi.pillai48@example.com,9675347897,Mumbai,Fashion,1,1049,1049,UPI,6,3
+O-10135,1/21/2026,Gurpreet Bose,gurpreet.bose94@example.org,8813421723,Pune,Home & Kitchen,3,649,1947,Cash on Delivery,4,4
+O-10136,7/13/2026,Venkat Ansari,venkat.ansari61@example.net,8219803346,Delhi,Fashion,1,1149,1149,Credit Card,4,2
+O-10137,1/29/2026,Aarav Patel,aarav.patel15@example.net,6707536455,Ahmedabad,home & kitchen,1,649,649,Cash on Delivery,4,5
+O-10138,7/26/2026,Aditya Mukherjee,aditya.mukherjee4@example.net,6805350191,Jaipur,Fashion,3,599,1797,UPI,4,2
+O-10139,5/7/2026,Anjali Sandhu,anjali.sandhu87@example.org,8326270586,,Electronics,3,849,2547,Credit Card,2,1
+O-10140,15/03/2026,Kabir Chatterjee,kabir.chatterjee37@example.org,8607874572,Mumbai,Home & Kitchen,2,2599,5198,Credit Card,2,4
+O-10141,1/14/2026,Nisha Agarwal,nisha.agarwal89@example.net,8732840934,Delhi,Electronics,1,3849,3849,Credit Card,3,5
+O-10142,5/22/2026,Neha Reddy,neha.reddy69@example.org,92045-33161,Chennai,Beauty,1,499,499,Cash on Delivery,3,4
+O-10143,1/8/2026,Rohan Sharma,rohan.sharma10@example.org,6722903575,Mumbai,Books,3,349,1047,UPI,4,5
+O-10144,6/29/2026,Tanvi Choudhary,tanvi.choudhary15@example.com,9294256493,Delhi,Books,1,499,499,Credit Card,4,
+O-10145,6/16/2026,Ananya Sandhu,ananya.sandhu94@example.net,7108357999,Lucknow,Beauty,3,999,2997,UPI,2,5
+O-10146,6/11/2026,Shreya Pandey,shreya.pandey13@example.net,8019018791,Bengaluru,Books,1,249,249,UPI,1,5
+O-10147,8/15/2026,Simran Banerjee,simran.banerjee43@example.com,7831663233,Kolkata,Home & Kitchen,1,599,599,Cash on Delivery,2,3
+O-10148,1/12/2026,Fatima Rao,fatima.rao8@example.net,8256579837,Mumbai,Electronics,2,2049,4098,Cash on Delivery,5,3
+O-10149,3/22/2026,Sai Jain,sai.jain39@example.com,7993215711,Bengaluru,Electronics,1,1899,1899,Debit Card,2,
+O-10150,7/29/2026,Riya Choudhary,riya.choudhary45@example.com,6621446134,Ahmedabad,Sports,2,2749,5498,Debit Card,2,3
+O-10151,1/29/2026,Divya Iyer,divya.iyer71@example.org,8522250435,Mumbai,Electronics,1,3899,3899,Credit Card,3,5
+O-10152,7/30/2026,Maria Das,maria.das46@example.org,7846312127,Kolkata,Electronics,1,4049,4049,Cash on Delivery,5,2
+O-10153,6/7/2026,Suresh Bose,suresh.bose5@example.com,0,Mumbai,Fashion,1,2799,2799,UPI,5,2
+O-10154,10/20/2026,Fatima Chatterjee,fatima.chatterjee72@example.org,7949482141,Gurugram,Fashion,3,1449,4347,Net Banking,5,3
+O-10155,5/18/2026,Rohan Singh,rohan.singh85@example.com,9627973676,Bengaluru,Fashion,1,999,999,Net Banking,5,1
+O-10156,3/1/2026,Meera Mukherjee,meera.mukherjee60@example.com,8877188413,Delhi,Home & Kitchen,1,1199,1199,Cash on Delivery,2,
+O-10157,1/26/2026,Ananya Ansari,ananya.ansari6@example.net,7927319796,Hyderabad,Books,3,599,1797,Cash on Delivery,3,4
+O-10158,7/4/2026,Venkat Banerjee,venkat.banerjee27@example.org,9258444193,Mumbai,Beauty,1,649,649,Cash on Delivery,1,1
+O-10159,8/1/2026,Fatima Patel,fatima.patel77@example.net,8100546598,Ahmedabad,Fashion,1,2149,2149,Cash on Delivery,3,5
+O-10160,5/21/2026,Yash Patil,yash.patil1@example.org,7423040541,Chennai,Sports,1,1049,1049,Net Banking,3,5
+O-10161,4/14/2026,Shreya Gupta,shreya.gupta61@example.net,9854579101,Gurugram,Electronics,1,2149,2149,Debit Card,5,5
+O-10162,3/28/2026,Riya Fernandes,riya.fernandes26@example.org,8405143815,Chennai,Fashion,1,949,949,UPI,3,5
+O-10163,5/31/2026,Vivaan Pillai,vivaan.pillai96@example.net,9496224590,Mumbai,Electronics,1,2449,2449,Cash on Delivery,2,5
+O-10164,3/3/2026,Ishaan Gill,ishaan.gill22@example.com,8599490452,Chennai,Electronics,1,1899,1899,netbanking,3,5
+O-10165,1/7/2026,Nikhil Kumar,nikhil.kumar64@example.com,6574719668,Delhi,Sports,2,2749,5498,UPI,1,5
+O-10166,8/23/2026,Neha Deshpande,neha.deshpande81@example.com,9066132496,Calcutta,Sports,2,899,1798,Credit Card,2,5
+O-10167,8/1/2026,Pranav Mishra,pranav.mishra46@example.com,9818812064,Mumbai,Home & Kitchen,2,849,1698,UPI,3,2
+O-10168,6/27/2026,Diya Bose,diya.bose46@example.org,6271052865,Pune,Electronics,1,4749,4749,Net Banking,5,4
+O-10169,8/2/2026,Kabir Das,kabir.das46@example.net,9990854177,Bengaluru,Sports,2,2399,4798,UPI,4,1
+O-10170,4/18/2026,Reyansh Reddy,reyansh.reddy84@example.com,8304907418,Delhi,Home & Kitchen,2,1049,2098,Net Banking,2,
+O-10171,4/24/2026,Pranav Mishra,pranav.mishra46@example.com,9818812064,Mumbai,Fashion,1,1199,1199,UPI,3,5
+O-10172,10/23/2026,Nisha Patil,nisha.patil17@example.net,7202269780,Bengaluru,Books,2,499,998,UPI,4,5
+O-10173,8/14/2026,Dhruv Menon,dhruv.menon60@example.com,8569632792,Hyderabad,Sports,3,849,2547,Cash on Delivery,3,5
+O-10174,6/7/2026,Siddharth  Agarwal,siddharth.agarwal33@example.net,6488961784,Mumbai,Sports,1,1249,1249,Cash on Delivery,1,
+O-10175,6/15/2026,Arif Rao,arif.rao6@example.org,6737028382,Delhi,Books,1,449,449,UPI,5,4
+O-10176,4/22/2026,Aarav Khan,aarav.khan37@example.net,8694037205,Bangalore,Books,3,399,1197,Cash on Delivery,4,3
+O-10177,2/20/2026,Kabir Joshi,kabir.joshi34@example.net,6351619945,Bengaluru,Fashion,1,549,,Net Banking,4,4
+O-10178,4/23/2026,Venkat Verma,venkat.verma58@example.net,6913175706,Mumbai,Beauty,3,499,1497,Credit Card,3,1
+O-10179,3/4/2026,Joseph Khan,joseph.khan33@example.com,7004876452,Kochi,Books,1,399,399,UPI,5,5
+O-10180,3/7/2026,Manav Mukherjee,manav.mukherjee86@example.org,9071964678,Pune,Fashion,2,1349,2698,Credit Card,6,1
+O-10181,8/4/2026,Diya Bose,diya.bose46@example.org,6271052865,Pune,Books,1,89999,89999,UPI,2,5
+O-10182,10/4/2026,Sai Jain,sai.jain39@example.com,7993215711,Bengaluru,Beauty,48,1099,52752,Debit Card,5,4
+O-10183,9/15/2026,Fatima Patel,fatima.patel77@example.net,8100546598,Ahmedabad,Sports,2,1399,2798,Debit Card,3,2
+O-10184,9/15/2026,Maria Gupta,maria.gupta35@example.net,9901125157,Gurugram,Fashion,1,2499,2499,UPI,4,5
+O-10185,7/5/2026,Rohan Deshpande,rohan.deshpande71@example.com,7579781768,Hyderabad,Electronics,1,3549,3549,UPI,3,5
+O-10186,2/10/2026,Nikhil Banerjee,nikhil.banerjee76@example.net,6237296131,Hyderabad,Home & Kitchen,2,949,1898,Net Banking,4,1
+O-10187,3/25/2026,Anjali Mehta,anjali.mehta18@example.org,6470675548,Lucknow,Fashion,1,1599,1599,Cash on Delivery,2,3
+O-10188,10/19/2026,Dhruv Menon,dhruv.menon60@example..com,8569632792,Hyderabad,Home & Kitchen,2,999,1998,Debit Card,2,4
+O-10055,6/25/2026,Fatima Kumar,fatima.kumar81@example.com,6701478499,Kolkata,Fashion,1,1199,1199,UPI,4,5
+O-10189,2/15/2026,Lakshmi Patil,lakshmi.patil57@example.net,7375578970,Mumbai,Fashion,1,849,849,Debit Card,2,5
+O-10190,7/3/2026,NISHA SINGH,nisha.singh64@example.org,7039622098,Lucknow,Sports,1,1849,1849,Debit Card,3,5
+O-10191,8/22/2026,Sai Jain,sai.jain14@example.net,9539210254,Chennai,Home & Kitchen,1,2749,2749,Cash on Delivery,1,4
+O-10192,9/10/2026,Aryan Iyer,aryan.iyer76@example.net,9628360161,Mumbai,Fashion,2,1149,2298,Credit Card,6,4
+O-10193,11-Feb-26,Dhruv Agarwal,dhruv.agarwal35@example.net,9164252477,Gurugram,Sports,1,1049,1049,Debit Card,4,4
+O-10194,5/26/2026,Diya Bose,diya.bose75@example.org,7575370730,Hyderabad,Electronics,1,2549,2549,Cash on Delivery,4,3
+O-10007,4/28/2026,Sai D'Souza,sai.dsouza38@example.net,7308694329,Pune,Beauty,1,149,149,Credit Card,2,2
+O-10196,3/4/2026,Sneha Mukherjee,sneha.mukherjee97@example.net,6586627125,Pune,Fashion,1,2249,2249,UPI,3,5
+O-10197,8/5/2026,Dhruv Menon,dhruv.menon60@example.com,85696-32792,Hyderabad,Sports,1,2199,2199,Net Banking,4,5
+O-10198,6/4/2026,Yash Patil,yash.patil1@example.org,7423040541,Chennai,Home & Kitchen,1,2649,2649,UPI,4,3
+O-10199,8/15/2027,Aarav Jain,aarav.jain47@example.net,7670887853,Mumbai,Sports,2,2449,4898,Net Banking,5,4
+O-10200,9/14/2026,Sai Pillai,sai.pillai54@example.com,8932796030,Chennai,Sports,1,949,949,Credit Card,7,
+O-10201,8/24/2026,Krishna D'Souza,krishna.dsouza97@example.com,6076177077,bengaluru,Books,1,749,749,UPI,6,2
+O-10202,3/22/2026,Rahul Khan,rahul.khan93@example.com,8504965709,Bengaluru,Fashion,2,999,1998,Cash on Delivery,6,4
+O-10203,7/8/2026,Neha Singh,neha.singh31@example.net,7454626857,Mumbai,Home & Kitchen,3,849,2547,Debit Card,4,5
+O-10204,5/15/2026,Nisha Singh,nisha.singh64@example.org,7039622098,Lucknow,Home & Kitchen,1,1249,1249,Credit Card,3,3
+O-10205,1/19/2026,Aarav Patel,aarav.patel1@example.net,6933190845,Mumbai,Electronics,2,4499,8998,UPI,4,
+O-10206,3/27/2026,Aditya Pillai,aditya.pillai91@example.org,6780578037,Mumbai,Fashion,1,1199,1199,Net Banking,3,4
+O-10207,3/2/2026,Neha Mishra,neha.mishra68@example.com,7472855689,Pune,Beauty,1,849,849,UPI,4,4
+O-10208,2/17/2026,Arjun Agarwal,arjun.agarwal50@example.net,6205593282,Bengaluru,Books,2,199,398,Debit Card,3,2
+O-10209,7/29/2026,Harpreet Rao,harpreet.rao79@example.com,8790817362,Mumbai,Electronics,2,1749,3498,UPI,3,1
+O-10210,2/5/2026,Siddharth Shah,siddharth.shah50@example.com,9591150602,Mumbai,Beauty,2,449,898,UPI,3,
+O-10211,4/8/2026,Reyansh Reddy,reyansh reddy84@example.com,8304907418,Delhi,Electronics,1,2299,2299,UPI,3,4
+O-10212,3/22/2026,Neha Reddy,neha.reddy69@example.org,9204533161,Chennai,Electronics,1,1949,1949,Credit Card,2,4
+O-10213,4/20/2026,Nikhil Singh,nikhil.singh48@example.com,9167650526,Bengaluru,Books,1,699,699,UPI,5,
+O-10214,2/25/2026,Meera Deshpande,meera.deshpande32@example.org,9110098976,Kolkata,Home & Kitchen,3,2849,8547,UPI,45,4
+O-10215,3/22/2026,Rahul Joshi,rahul.joshi80@example.net,9704410475,Pune,Electronics,2,3149,6298,Net Banking,4,5
+O-10216,8/1/2026,Simran Banerjee,simran.banerjee43@example.com,7831663233,Kolkata,Fashion,0,799,0,UPI,3,4
+O-10217,2/20/2026,Simran Menon,simran.menon21@example.net,8845263097,Kochi,Fashion,2,1149,,Net Banking,6,4
+O-10218,2/12/2026,Kavya Mehta,kavya.mehta79@example.org,0,Ahmedabad,Electronics,1,2299,2299,Debit Card,5,
+O-10219,1/16/2026,Pooja Jain,pooja.jain7@example.com,7282228498,Mumbai,Beauty,3,849,2547,Cash on Delivery,5,4
+O-10220,9/13/2026,Arjun D'Souza,arjun.dsouza51@example.com,8167682597,Delhi,Beauty,2,1249,2498,Credit Card,4,4
+O-10221,5/3/2026,Simran Khan,simran.khan81@example.com,7138560700,Delhi,Electronics,1,1549,1549,UPI,3,5
+O-10222,4/27/2026,Vivaan Gupta,vivaan.gupta96@example.com,6524735736,Delhi,Electronics,1,3049,3049,Cash on Delivery,6,
+O-10223,7/24/2026,Rahul Ansari,rahul.ansari82@example.org,6431041726,Mumbai,Home & Kitchen,1,1549,1549,Credit Card,4,5
+O-10224,10/1/2026,Tanvi Pillai,tanvi.pillai48@example.com,9675347897,Mumbai,Home & Kitchen,1,1349,1349,UPI,3,5
+O-10225,9/16/2026,Varun Deshpande,varun.deshpande28@example.org,6059813417,Mumbai,Home & Kitchen,3,2299,6897,UPI,1,
+O-10226,5/31/2026,Gurpreet Deshpande,gurpreet.deshpande33@example.org,6898233843,Mumbai,Electronics,1,1649,1649,Credit Card,2,4
+O-10227,2026-02-30,Manav Mehta,manav.mehta1@example.com,7315604083,Lucknow,Fashion,1,2549,2549,Debit Card,3,4
+O-10228,6/9/2026,Krishna Shah,krishna.shah25@example.org,9592115327,Hyderabad,Fashion,1,999,999,Net Banking,7,5
+O-10229,5/5/2026,Harpreet Agarwal,harpreet.agarwal6@example.com,9837547415,Gurugram,Books,2,599,1198,UPI,3,
+O-10230,2/13/2026,Venkat Mishra,venkat.mishra82@example.com,8188447294, Mumbai,Beauty,1,799,799,UPI,6,5
+O-10231,6/1/2026,Simran Khan,simran.khan81@example.com,7138560700,Delhi,Electronics,2,2449,4898,Cash on Delivery,4,5
+O-10232,10/9/2026,Siddharth Banerjee,siddharth.banerjee37@example.net,8451995593,Pune,Electronics,2,1899,3798,UPI,6,
+O-10233,9/28/2026,Nisha Sharma,nisha.sharma4@example.net,7051478658,Pune,Electronics,2,2699,5398,Credit Card,4,5
+O-10234,3/3/2026,Arif Joshi,arif.joshi4@example.net,7566636322,Chennai,Home & Kitchen,2,549,1098,Credit Card,3,1
+O-10235,7/30/2026,Krishna Pandey,krishna.pandey36@example.net,7145302544,Mumbai,Books,1,599,599,UPI,5,4
+O-10236,6/30/2026,Imran Pandey,imran.pandey75@example.org,7708538671,Delhi,Home & Kitchen,1,1199,1199,UPI,2,4
+O-10237,7/19/2026,Gurpreet Bose,gurpreet.bose94@example.org,8813421723,Pune,Electronics,2,1049,2098,UPI,2,3
+O-10238,2/4/2026,Aryan Patel,aryan.patel60@example.com,7613873037,Bengaluru,Beauty,1,799,799,Net Banking,3,5
+O-10239,9/3/2026,Anjali Sandhu,anjali.sandhu87@example.org,8326270586,Ahmedabad,Home & Kitchen,2,1349,2698,Debit Card,4,5
+O-10240,6/29/2026,Tanvi Nair,tanvi.nair89@example.net,9641220284,Chennai,Fashion,3,2799,8397,UPI,3,4
+O-10241,3/17/2026,Manav Ansari,manav.ansari48@example.org,9306424829,Bengaluru,Home & Kitchen,3,1999,5997,Debit Card,4,2
+O-10242,5/29/2026,Kabir Chatterjee,kabir.chatterjee37@example.org,8607874572,Mumbai,Beauty,2,799,1598,UPI,3,
+O-10243,1/15/2026,Venkat Ansari,venkat.ansari61@example.net,8219803346,Delhi,Fashion,1,1099,1099,Cash on Delivery,4,5
+O-10244,3/14/2026,Kabir Chatterjee,kabir.chatterjee37@example.org,8607874572,Mumbai,Books,2,399,798,Cash on Delivery,5,1
+O-10245,9/14/2026,Saanvi Pillai,saanvi.pillai98@example.net,8796725218,Lucknow,Sports,2,1299,2598,Cash on Delivery,7,3
+O-10246,17/01/2026,Neha Reddy,neha.reddy69@example.org,9204533161,Chennai,Fashion,120,1199,143880,UPI,4,3
+O-10247,3/17/2026,Venkat Kumar,venkat.kumar99@example.org,7446026195,Bengaluru,Electronics,1,3499,3499,CC,4,
+O-10248,8/20/2026,Rohan Deshpande,rohan.deshpande71@example.com,7579781768,Hyderabad,Fashion,2,2299,4598,Cash on Delivery,5,5
+O-10249,7/5/2026,Rahul Gupta,rahul.gupta46@example.org,9760553848,Kolkata,Beauty,1,399,399,UPI,3,5
+O-10250,7/23/2026,Harpreet Chatterjee,harpreet.chatterjee10@example.org,9134069563,Mumbai,Fashion,2,1449,2898,Cash on Delivery,4,5
+O-10251,7/22/2026,Vivaan Choudhary,vivaan.choudhary28@example.net,6872438546,Jaipur,Beauty,1,649,649,Debit Card,6,5
+O-10252,8/26/2026,Pranav Reddy,pranav.reddy3@example.net,9941655728,Bengaluru,Books,1,299,299,UPI,5,5
+O-10253,6-Sep-26,Saanvi Rao,saanvi.rao10@@example.org,7488619307,Delhi,Sports,2,3099,6198,Credit Card,4,4
+O-10254,4/17/2026,Tanvi Iyer,tanvi.iyer3@example.net,8473548643,CHENNAI,Fashion,1,1249,1249,UPI,4,3
+O-10255,1/3/2026,Maria Sandhu,maria.sandhu30@example.com,7662022920,Mumbai,Books,3,249,747,Upi,2,
+O-10256,5/10/2026,Aadhya Khan,aadhya.khan69@example.com,6670907276,Mumbai,Home & Kitchen,1,349,349,Cash on Delivery,1,5
+O-10257,1/1/2026,Kabir Sandhu,kabir.sandhu72@example.com,8478504210,Ahmedabad,Beauty,1,849,849,UPI,3,2
+O-10258,5/7/2026,Yash Sandhu,yash.sandhu51@example.org,9776344881,Mumbai,Books,1,649,649,UPI,3,4
+O-10259,4/17/2026,Ishita Menon,ishita.menon97@example.net,6671552930,Bombay,Books,3,649,1947,Net Banking,7,
+O-10260,7/10/2026,Neha Singh,neha.singh18@example.org,7258385153,Delhi,Fashion,1,1399,1399,UPI,4,5
+O-10261,1/1/2026,Kavya Mehta,kavya.mehta79@example.org,8309552111,Ahmedabad,Home & Kitchen,1,849,849,credit card,4,
+O-10262,7/20/2026,Sneha Mukherjee,sneha.mukherjee97@example.net,6586627125,Pune,Fashion,1,2749,2749,UPI,4,3
+O-10263,3/1/2026,Shreya Gupta,shreya.gupta61@example.net,9854579101,Gurugram,Fashion,2,1049,2098,Debit Card,3,2
+O-10264,2/2/2026,Arif Reddy,arif.reddy99@example.org,7853959893,Unknown,Fashion,1,1599,1599,CreditCard,3,4
+O-10265,5/7/2026,Imran Pandey,imran.pandey54@example.net,6364270575,Bengaluru,Fashion,1,1249,1249,UPI,5,5
+O-10266,16/04/2026,Kabir Bose,kabir.bose4@example.org,7410804057,Pune,Electronics,2,2199,4398,Debit Card,5,3
+O-10267,8/28/2026,Yash Singh,yash.singh92@example.org,6486124157,Delhi,Home & Kitchen,1,749,749,Debit Card,2,4
+O-10268,8/31/2026,Rahul Joshi,rahul.joshi80@example.net,9704410475,Pune,Beauty,1,399,399,Cash on Delivery,4,4
+O-10269,2/4/2026,Diya D'Souza,diya.dsouza34@example.org,7338792687,Hyderabad,Home & Kitchen,1,1299,1299,UPI,4,
+O-10493,5/29/2026,Kabir  Chatterjee,kabir.chatterjee37@example.org,8607874572,Mumbai,Beauty,2,799,1598,UPI,3,
+O-10270,9/26/2026,Kavya Mehta,kavya.mehta79@example.org,8309552111,Ahmedabad,Sports,1,1299,1299,UPI,3,5
+O-10271,6/28/2026,Manav Ansari,manav.ansari48@example.org,9306424829,Bengaluru,Fashion,2,1149,2298,UPI,4,2
+O-10272,9/3/2026,Krishna Ansari,krishna.ansari30@example.com,6119602780,Pune,Books,1,299,299,UPI,3,4
+O-10273,4/2/2026,Venkat Pillai,venkat.pillai73@example.com,8186354464,Delhi,Fashion,1,949,949,UPI,1,5
+O-10274,7/19/2026,Kabir Deshpande,kabir.deshpande65@example.com,743631847,Kolkata,Beauty,2,499,998,UPI,3,4
+O-10275,7/27/2026,Ishita Jain,ishita.jain96@example.net,7782760821,Kolkata,Electronics,1,1299,1299,Cash on Delivery,5,1
+O-10276,8/26/2026,Anjali Sharma,anjali.sharma95@example.org,6100052007,Bombay,Electronics,2,2199,4398,Debit Card,3,4
+O-10106,6/27/2026,Rahul Pillai,rahul.pillai13@example.com,6454945997,Mumbai,Electronics,2,1999,3998,Net Banking,4,1
+O-10277,4/21/2026,Aarav Sharma,aarav.sharma92@example.org,6537910172,Lucknow,Electronics,1,3949,3949,Cash on Delivery,6,5
+O-10278,3/3/2026,Venkat Gupta,venkat.gupta81@example.org,7188904995,Delhi,Fashion,1,999,999,UPI,3,4
+O-10279,1/22/2026,Karan Banerjee,karan.banerjee89@example.net,9876804571,Hyderabad,Electronics,2,1799,3598,UPI,3,
+O-10280,9/24/2026,Kabir Joshi,,6351619945,,Home & Kitchen,2,2849,5698,Net Banking,4,4
+O-10281,7/5/2026,Krishna Shah,krishna.shah25@example,9592115327,Hyderabad,Fashion,2,1549,3098,UPI,6,4
+O-10282,1/19/2026,Kavya Pandey,kavya.pandey34@example.net,9880932081,Pune,Beauty,2,249,498,UPI,1,
+O-10283,2/16/2026,Sai Jain,sai.jain14@example.net,9539210254,Chennai,Fashion,2,1699,3398,Credit Card,4,3
+O-10284,1/29/2026,Aadhya Patil,aadhya.patil99@example.com,6875475177,Madras,Books,2,349,698,UPI,2,4
+O-10285,5/26/2026,Sneha Sandhu,sneha.sandhu44@example.com,6314503784,Kolkata,Electronics,2,1349,2698,Debit Card,3,5
+O-10286,1/9/2026,Aryan Nair,aryan.nair76@example.org,7695793186,Mumbai,Home & Kitchen,1,1099,1099,UPI,2,5
+O-10287,6/27/2026,Ishaan Kulkarni,ishaan.kulkarni65@example.org,6399869879,Hyderabad,Electronics,1,2749,2749,Credit Card,1,4
+O-10288,2/2/2026,Siddharth Banerjee,,8451995593,Pune,Fashion,2,1349,2698,UPI,1,4
+O-10289,5/14/2026,Kavya Agarwal,kavya.agarwal62@example.net,8479783768,Chennai,Beauty,3,449,1347,UPI,2,5
+O-10290,1/12/2026,Divya Gill,divya.gill82@example.net,9085651788,Delhi,Fashion,1,2449,2449,Credit Card,2,5
+O-10291,7/14/2026,Harpreet Rao,harpreet.rao37@example.org,7170788745,Pune,Sports,1,1549,1549,Cash on Delivery,3,4
+O-10292,5/20/2026,Anjali Mehta,anjali.mehta18@example.org,6470675548,Lucknow,Electronics,1,2949,2949,UPI,3,4
+O-10293,10/15/2026,Saanvi Patil,saanvi.patil81@example.net,9517472600,Kochi,Fashion,2,2199,4398,Debit Card,5,5
+O-10294,4/16/2026,Krishna Singh,krishna.singh53@example.com,9148836152,Mumbai,Books,3,199,597,Debit Card,4,5
+O-10295,2/17/2026,Riya Agarwal,riya.agarwal37@example.com,8249770533,Bengaluru,Fashion,1,1149,1149,UPI,2,4
+O-10296,6/29/2026,Dhruv Choudhary,dhruv.choudhary11@example.org,7724329896,Ahmedabad,Books,2,399,798,Net Banking,3,4
+O-10297,7/24/2026,Divya Gupta,divya.gupta27@example.com,7126686922,Hyderabad,Fashion,1,849,849,Credit Card,5,2
+O-10298,7/15/2026,Simran Sandhu,simran.sandhu47@example.com,7257192948,Mumbai,Fashion,3,1899,5697,Net Banking,2,2
+O-10299,1/1/1999,Fatima Chatterjee,fatima.chatterjee72@example.org,7949482141,Gurugram,Fashion,3,1799,5397,UPI,7,
+O-10300,4/13/2026,Kabir Chatterjee,kabir.chatterjee37@example.org,8607874572,Mumbai,fashion ,2,1599,3198,UPI,3,
+O-10301,8/6/2026,Aadhya Choudhary,aadhya.choudhary84@example.org,7071013627,Mumbai,Home & Kitchen,1,949,949,Net Banking,2,
+O-10302,8/24/2026,Zoya Verma,zoya.verma66@example.net,6644132076,Bengaluru,Fashion,1,2349,2349,Cash on Delivery,3,3
+O-10303,5/7/2026,Venkat Sharma,venkat.sharma4@example.net,7791372987,Mumbai,Home & Kitchen,2,1099,2198,UPI,5,3
+O-10304,5/23/2026,Sneha Rao,sneha.rao55@example.com,9011774465,Mumbai,Electronics,1,3299,3299,UPI,3,4
+O-10305,4/12/2026,Reyansh Das,reyansh.das68@example.com,6294715029,Bengaluru,Fashion,1,1449,1449,Credit Card,3,10
+O-10306,5/5/2026,Aditya Singh,aditya.singh22@example.org,8924421431,Ahmedabad,Books,1,449,449,UPI,4,
+O-10307,10/13/2026,Diya Bose,diya.bose46@example.org,6271052865,Pune,Sports,2,2949,5898,UPI,4,5
+O-10308,9/19/2026,Dhruv Sharma,dhruv.sharma15@example.org,8129432144,Bengaluru,Home & Kitchen,2,399,798,Cash on Delivery,3,4
+O-10309,1/22/2026,Meera Kumar,meera.kumar93@example.org,8791889575,Kolkata,Sports,2,3449,6898,Cash on Delivery,3,5
+O-10310,8/9/2026,Karan Sandhu,karan.sandhu55@example.org,8834275560,Pune,Fashion,3,1649,4947,Cash on Delivery,3,
+O-10311,6/1/2026,Aadhya Nair,aadhya.nair85@example.org,9941683708,Delhi,Books,1,399,399,Credit Card,2,
+O-10312,1/4/2026,Arif Gill,arif.gill79@example.net,+91 62520 16128,Jaipur,Home & Kitchen,1,249,249,UPI,2,1
+O-10313,5/9/2026,Suresh Mishra,suresh.mishra54example.net,7238616258,Chennai,Beauty,2,499,998,UPI,6,2
+O-10314,8/10/2026,Ishita Rao,ishita.rao79@example.com,7271745143,Bengaluru,Electronics,1,4449,4449,UPI,3,4
+O-10315,6/21/2026,Ishaan Reddy,ishaan.reddy98@example.net,7351658509,Jaipur,Books,2,549,1098,UPI,2,5
+O-10316,4/1/2026,Sai Agarwal,sai.agarwal68@example.org,9561141082,Delhi,Electronics,3,3699,11097,Debit Card,5,5
+O-10317,10/2/2026,Fatima Joshi,fatima.joshi30@example.org,7864089487,Delhi,Home & Kitchen,1,799,799,Net Banking,3,2
+O-10318,5/11/2026,Varun Ansari,varun.ansari10@example.net,8442014613,Kolkata,Home & Kitchen,2,1499,2998,UPI,1,5
+O-10319,4/22/2026,Neha Singh,neha.singh18@example.org,7258385153,Delhi,Fashion,1,1249,1249,Cash on Delivery,6,
+O-10244,3/14/2026,Kabir Chatterjee,kabir.chatterjee37@example.org,8607874572,Mumbai,Books,2,399,798,Cash on Delivery,5,1
+O-10320,9/29/2026,Aryan Patel,aryan.patel60@example.com,7613873037,Bengaluru,Home & Kitchen,1,699,699,Debit Card,6,
+O-10321,2/5/2026,Vivaan Patel,vivaan.patel79@example.org,8073929239,Mumbai,Beauty,2,599,1198,UPI,4,4
+O-10322,1/7/2026,Venkat Gupta,venkat.gupta81@example.org,7188904995,Delhi,Fashion,2,399,798,Net Banking,3,3
+O-10323,7/9/2026,Ishita Menon,ishita.menon97@example.net,6671552930,Mumbai,Fashion,2,1799,3598,Debit Card,5,5
+O-10324,2/5/2026,Imran Joshi,imran.joshi74@example.com,8321687078,Pune,Fashion,1,1299,1299,UPI,2,3
+O-10325,8/30/2026,Arif Joshi,,7566636322,Chennai,Electronics,1,2649,2649,UPI,1,3
+O-10326,7/15/2026,Tanvi Sandhu,tanvi.sandhu86@example.com,7374366304,Delhi,Sports,1,1649,1649,Debit Card,5,4
+O-10327,6/21/2026,Yash Singh,yash.singh92@example.org,6486124157,Delhi,Fashion,2,999,1998,Credit Card,1,4
+O-10328,25/10/2026,Yash Patel,yash.patel79@example.net,9065426817,Delhi,Beauty,2,599,1198,UPI,2,5
+O-10329,10/30/2026,Shreya Gupta,shreya.gupta61@example.net,9854579101,Gurugram,Fashion,2,699,1398,UPI,3,3
+O-10213,4/20/2026,Nikhil Singh,nikhil.singh48@example.com,9167650526,Bengaluru,Books,1,699,699,UPI,5,
+O-10330,9/20/2026,Rohan Singh,rohan.singh85@example.com,9627973676,Bengaluru,Electronics,2,3249,6498,Net Banking,6,4
+O-10331,9/26/2026,Aditya Pillai,aditya.pillai91@example.org,6780578037,Mumbai,Fashion,2,2799,5598,Cash on Delivery,3,
+O-10332,9/29/2026,Ishita Bose,ishita.bose25@example.org,9876480761,Delhi,Fashion,1,1049,1049,Cash on Delivery,4,
+O-10333,4/20/2026,Suresh Bose,suresh.bose5@example.com,8549352975,Mumbai,Fashion,1,499,499,UPI,3,5
+O-10323,7/9/2026,Ishita Menon,ishita.menon97@example.net,6671552930,Mumbai,Fashion,2,1799,3598,Debit Card,5,5
+O-10334,9/28/2026,Dhruv Mukherjee,dhruv.mukherjee62@example.org,9530050297,Ahmedabad,Home & Kitchen,1,1399,1399,UPI,4,3
+O-10335,9/27/2026,Kabir Joshi,kabir.joshi34@example.net,6351619945,Bengaluru,Fashion,1,1899,1899,Net Banking,6,3
+O-10336,5/24/2026,Aditya Pillai,,6780578037,Mumbai,Fashion,3,1449,4347,Cash on Delivery,3,1
+O-10337,6/3/2026,Reyansh Fernandes,reyansh.fernandes7@example.com,7699653864,Chennai,Sports,2,1299,2598,Net Banking,2,5
+O-10338,1/17/2026,Riya Choudhary,riya.choudhary45@example.com,6621446134,Ahmedabad,Fashion,2,1749,3498,Cash on Delivery,4,1
+O-10339,1/24/2026,Aadhya Deshpande,aadhya.deshpande8@example.net,7048425996,Ahmedabad,Sports,1,3049,3049,UPI,2,5
+O-10340,6/24/2026,Lakshmi Mishra,lakshmi.mishra30@example.net,8555974754,Mumbai,Home & Kitchen,2,999,1998,Credit Card,4,
+O-10341,7/17/2026,Divya Patil,divya.patil41@example.net,6659397615,Jaipur,Fashion,1,1649,1649,Credit Card,3,4
+O-10342,4/15/2026,Fatima Rao,fatima.rao8@example.net,8256579837,Mumbai,Books,2,299,598,Credit Card,3,2
+O-10343,4/29/2026,Sneha Mukherjee,sneha.mukherjee97@example.net,6586627125,Pune,Electronics,1,4149,4149,Credit Card,6,4
+O-10491,5/14/2026,KAVYA AGARWAL,kavya.agarwal62@example.net,8479783768,Chennai,Beauty,3,449,1347,UPI,2,5
+O-10344,3/7/2026,Kabir Das,kabir.das46@example.net,9990854177,Bengaluru,Beauty,3,399,1197,Cash on Delivery,2,4
+O-10345,10/28/2026,Krishna Singh,krishna.singh53@example.com,9148836152,Mumbai,Fashion,1,1199,1199,UPI,7,5
+O-10346,2/23/2026,Rohan Mehta,rohan.mehta93@example.com,7238637877,Bengaluru,Sports,1,2449,2449,Debit Card,3,
+O-10347,7/9/2026,Diya Joshi,diya.joshi87@example.org,9195734813,Mumbai,Books,2,749,1498,UPI,3,2
+O-10348,4/26/2026,Aarav Fernandes,aarav.fernandes76@example.com,6357164774,Delhi,Fashion,2,999,1998,UPI,4,5
+O-10349,3/12/2026,Aarav Jain,aarav.jain47@example.net,7670887853,Mumbai,Books,2,399,798,Cash on Delivery,2,5
+O-10350,2/27/2026,Varun Kumar,varun.kumar2@example.net,8600130411,Kolkata,Fashion,1,549,549,Net Banking,4,3
+O-10351,9/9/2026,Kavya Reddy,kavya.reddy14@example.org,8477127462,Mumbai,Sports,2,1799,3598,Cash on Delivery,3,5
+O-10352,10/15/2026,Harpreet Rao,harpreet.rao37@example.org,7170788745,Pune,Beauty,1,649,649,Cash on Delivery,5,5
+O-10353,3/31/2026,Venkat Kumar,venkat.kumar99@example.org,7446026195,Bengaluru,Electronics,1,1099,,Credit Card,3,4
+O-10354,8/31/2026,Anjali Patil,anjali.patil29@example.org,8704247613,Bengaluru,Electronics,1,3799,3799,Credit Card,1,3
+O-10355,16/04/2026,Krishna Patel,krishna.patel16@example.org,+91 73178 20540,Kolkata,Fashion,1,1699,1699,UPI,2,4
+O-10356,10/29/2026,Manav Mehta,manav.mehta1@example.com,7315604083,Lucknow,Fashion,2,949,1898,UPI,5,2
+O-10357,6/1/2026,Karan Menon,karan.menon23@example.org,+91 83030 49417,DELHI ,Home & Kitchen,1,949,949,Net Banking,2,3
+O-10358,7/19/2026,Siddharth Shah,siddharth.shah50@example.com,9591150602,Mumbai,Beauty,2,1099,2198, UPI,6,4
+O-10359,10/18/2026,Divya Fernandes,divya.fernandes55@example.com,8343817216,Lucknow,Books,1,349,349,Debit Card,2,4
+O-10360,9/5/2026,Ananya Ansari,ananya.ansari6@example.net,7927319796,Hyderabad,Home & Kitchen,2,1649,3298,UPI,4,4
+O-10361,7/14/2026,Joseph Khan,joseph.khan33@example.com,7004876452,Kochi,Fashion,2,799,1598,UPI,3,5
+O-10362,7/19/2026,Fatima Joshi,fatima.joshi83@example.com,8771883579,Bengaluru,Home & Kitchen,2,2649,5298,Cash on Delivery,3,4
+O-10363,8/1/2026,Venkat Ansari,venkat.ansari61@example.net,8219803346,Delhi,Electronics,3,1899,5697,UPI,4,4
+O-10364,8/20/2026,Nikhil Singh,nikhil.singh48@example.com,9167650526,Bengaluru,Electronics,1,4149,4149,Credit Card,3,4
+O-10365,5/1/2026,Nisha Khan,nisha.khan30@example.net,9800641735,Chennai,Home & Kitchen,1,1449,1449,UPI,3,5
+O-10366,6/13/2026,Manav Ansari,manav.ansari48@example.org,9306424829,Bengaluru,Electronics,1,1999,1999,Debit Card,4,4
+O-10367,7/28/2026,Rohan Sharma,rohan.sharma79@example.org,8264079426,Kolkata,Fashion,1,1749,1749,Credit Card,3,3
+O-10368,6/9/2026,Vivaan Shah,vivaan.shah57@example.com,7927330570,Delhi,Electronics,1,4599,4599,UPI,1,4
+O-10369,9/25/2026,Ishaan Reddy,ishaan.reddy98@example.net,7351658509,Jaipur,Sports,3,2499,7497,Cash on Delivery,2,
+O-10370,2/7/2026,Anjali Patel,anjali.patel18@example.net,6726436628,Ahmedabad,Books,1,749,749,UPI,3,1
+O-10494,7/20/2026,SNEHA MUKHERJEE,sneha.mukherjee97@example.net,6586627125,Pune,Fashion,1,2749,2749,UPI,4,3
+O-10371,7/12/2026,Vivaan Shah,vivaan.shah57@example.com,7927330570,Delhi,Beauty,1,949,949,UPI,2,5
+O-10372,8/31/2026,Manav Mukherjee,manav.mukherjee86@example.org,9071964678,Pune,Beauty,1,299,299,UPI,2,4
+O-10373,5/16/2026,Diya Bose,diya.bose75@example.org,7575370730,Hyderabad,Books,3,649,1947,UPI,2,4
+O-10374,4/14/2026,SAANVI PATIL,saanvi.patil81@example.net,9517472600,Kochi,Electronics,2,1549,3098,Net Banking,2,2
+O-10375,4/17/2026,Sai Jain,sai.jain39@example.com,7993215711,Bengaluru,Book,2,649,1298,Debit Card,5,5
+O-10376,10/3/2026,Simran Sandhu,simran.sandhu47@example.com,7257192948,Mumbai,Home & Kitchen,1,1449,1449,UPI,2,5
+O-10377,2/24/2026,Aarav Fernandes,aarav.fernandes76@example.com,6357164774,delhi,Home & Kitchen,1,2749,2749,Cash on Delivery,1,5
+O-10378,2-May-26,Venkat Gill,venkat.gill68@example.org,7352401376,Mumbai,Sports,3,2099,6297,UPI,3,4
+O-10379,10/31/2026,Tanvi Nair,tanvi.nair89@example.net,9641220284,Chennai,Fashion,1,1399,1399,Credit Card,120,4
+O-10380,4/20/2026,Pooja Jain,pooja.jain7@example.com,7282228498,Mumbai,Fashion,1,2249,2249,Debit Card,2,5
+O-10381,7/2/2026,Meera Deshpande,meera.deshpande32@example.org,9110098976,Kolkata,Home & Kitchen,2,799,1598,Cash on Delivery,3,4
+O-10382,4/25/2026,Fatima Chatterjee,fatima.chatterjee72@example.org,7949482141,Gurgaon,Fashion,2,1349,2698,UPI,7,4
+O-10383,6/10/2026,Rohan Singh,rohan.singh85@example.com,9627973676,Bengaluru,Fashion,1,2099,2099,Cash on Delivery,2,4
+O-10384,7/18/2026,Anjali Patil,anjali.patil29@example.org,8704247613,Bengaluru,Electronics,1,1799,1799,Credit Card,3,3
+O-10385,9/14/2026,Yash Patel,yash.patel79@example.net,9065426817,Delhi,Sports,2,1549,3098,Net Banking,3,1
+O-10386,6/12/2026,Pooja Jain,,7282228498,Mumbai,Fashion,-2,2299,-4598,Cash on Delivery,5,5
+O-10387,4/3/2026,Vivaan Pillai,vivaan.pillai96@example.net,9496224590,Mumbai,Electronics,1,1799,1799,UPI,3,4
+O-10388,8/3/2026,Ishita Nair,ishita.nair88@example.org,6011087530,Hyderabad,Fashion,2,799,1598,UPI,6,2
+O-10389,9/26/2026,Dhruv Patel,dhruv.patel13@example.net,8055458920,Delhi,Home & Kitchen,2,1749,3498,UPI,4,3
+O-10390,5/21/2026,Saanvi Jain,saanvi.jain67@example.net,9252845618,Ahmedabad,Fashion,1,999,999,UPI,7,5
+O-10391,3/8/2026,Kabir Verma,kabir.verma93@example.org,-8265116178,Gurugram,Books,2,199,398,UPI,4,
+O-10392,1/15/2026,Suresh D'Souza,suresh.dsouza39@example.org,7857299584,Jaipur,Books,1,649,649,Cash on Delivery,2,1
+O-10393,5/17/2026,Aryan Shah,aryan.shah88@example.com,8218549145,Delhi,Electronics,1,3549,3549,UPI,3,3
+O-10394,6/8/2026,Anjali Patel,anjali.patel18@example.net,6726436628,Ahmedabad,Electronics,2,2299,4598,Credit Card,3,2
+O-10395,8/24/2026,Divya Gupta,divya.gupta27@example.com,7126686922,Hyderabad,Beauty,1,449,449,Net Banking,3,4
+O-10396,8/2/2026,Meera Pillai,meera.pillai34@example.com,8613575069,Pune,Electronics,3,3299,9897,Debit Card,1,
+O-10397,9/20/2026,Aryan Nair,aryan.nair76@example.org,7695793186,unknown,Fashion,3,1299,3897,UPI,-3,4
+O-10398,1/5/2026,Krishna D'Souza,,6076177077,Bengaluru,Beauty,2,499,998,Credit Card,3,3
+O-10399,2/6/2026,Vivaan Choudhary,vivaan.choudhary87@example.org,6146576126,Bengaluru,Books,1,249,249,Debit Card,3,
+O-10400,1/29/2026,Rohan Ansari,rohan.ansari57@example.com,6297705792,Chennai,Electronics,1,1499,1499,UPI,4,4
+O-10401,8/20/2026,Aarav Jain,aarav.jain47@example.net,7670887853,Mumbai,Home & Kitchen,1,2549,2549,Credit Card,4,5
+O-10402,2/23/2026,Kavya Kumar,kavya.kumar2@example.net,6483354148,Chennai,Electronics,1,2299,2299,Credit Card,7,
+O-10403,5/17/2026,Tanvi Nair,tanvi.nair89@example.net,9641220284,Chennai,Sports,1,3449,3449,UPI,5,
+O-10404,3/23/2026,Maria Iyer,maria.iyer22@example.net,6521657675,Kolkata,Fashion,1,1349,1349,Net Banking,5,4
+O-10405,4/22/2026,Imran Pandey,imran.pandey81@example.com,9354011527,Kolkata,Fashion,3,1799,5397,UPI,4,5
+O-10406,9/14/2026,Suresh Bose,suresh.bose5@example.com,8549352975,Mumbai,Fashion,2,1599,3198,UPI,5,
+O-10407,10/19/2026,Venkat Pillai,venkat.pillai73@example.com,8186354464,Delhi,Home & Kitchen,1,1449,1449,UPI,5,4
+O-10408,8/24/2026,Pooja Jain,pooja.jain7@example.com,7282228498,Mumbai,Home & Kitchen,2,2249,4498,UPI,6,5
+O-10409,5/9/2026,Anjali Patel,anjali.patel18@example.net,6726436628,Ahmedabad,Beauty,1,599,599,UPI,2,5
+O-10410,10/15/2026,Aryan Nair,aryan.nair76@example.org,7695793186,Mumbai,Fashion,2,2249,4498,Debit Card,3,5
+O-10411,2/2/2026,Kabir Sandhu,kabir.sandhu72@example.com,8478504210,Ahmedabad,Fashion,2,1349,2698,UPI,5,1
+O-10412,8/27/2026,Kavya Deshpande,kavya.deshpande25@example.org,7823283774,Ahmedabad,Fashion,1,2099,2099,Credit Card,4,4
+O-10413,26/05/2026,Harpreet Agarwal,,9837547415,Gurugram,Electronics,3,2099,6297,UPI,3,3
+O-10414,6/19/2026,Venkat Verma,venkat.verma58@example.net,6913175706,Mumbai,Home & Kitchen,1,2949,2949,Cash on Delivery,7,5
+O-10415,10/5/2026,Aditya Singh,aditya.singh22@example.org,8924421431,Ahmedabad,Home & Kitchen,3,2899,8697,Net Banking,3,2
+O-10416,9/23/2026,Harpreet Rao,harpreet.rao37@example.org,7170788745,Pune,Books,3,499,1497,Cash on Delivery,6,4
+O-10417,5/28/2026,Gurpreet Choudhary,gurpreet.choudhary36@example.com,+91 63974 15050,Mumbai,Home & Kitchen,2,949,1898,Cash on Delivery,4,4
+O-10418,6/18/2026,Reyansh Das,reyansh.das68@example.com,6294715029,Bengaluru,Home & Kitchen,1,999,999,Cash on Delivery,3,5
+O-10419,7/16/2026,Saanvi Pillai,saanvi.pillai98@example.net,8796725218,Lucknow,Electronics,2,3699,8730,Credit Card,4,3
+O-10411,2/2/2026,Kabir Sandhu,kabir.sandhu72@example.com,8478504210,Ahmedabad,Fashion,2,1349,2698,UPI,5,1
+O-10420,2/18/2026,Varun Shah,varun.shah99@example.net,8486080222,Delhi,Home & Kitchen,1,2699,2699,Cash on Delivery,1,4
+O-10421,3/14/2026,Krishna D'Souza,krishna.dsouza97@example.com,6076177077,Bengaluru,Electronics,2,2649,5298,Cash on Delivery,4,5
+O-10422,9/18/2026,Aadhya Khan,aadhya.khan69@example.com,6670907276,Mumbai,Fashion,1,1349,1349,Debit Card,4,5
+O-10423,4/23/2026,Sai Joshi,sai.joshi23@example.com,9336979516,Chennai,Home & Kitchen,2,899,1798,UPI,6,4
+O-10424,8/31/2026,Tanvi Nair,tanvi.nair89@example.net,9.64122E+11,Chennai,Books,2,599,1198,Credit Card,3,4
+O-10425,8/22/2026,Siddharth Nair,siddharth.nair41@example.org,8893549146,Kolkata,Beauty,1,399,399,Debit Card,2,2
+O-10426,5/11/2026,Joseph Khan,joseph.khan33@example.com,7004876452,Kochi,Books,2,399,798,Cash on Delivery,3,5
+O-10427,9/30/2026,Yash Sandhu,,9776344881,,Sports,1,699,699,Cash on Delivery,2,5
+O-10428,9/9/2026,Joseph Khan,joseph.khan33@example.com,7004876452,Kochi,Fashion,1,1599,1599,Cash on Delivery,4,3
+O-10429,9/11/2026,Anjali Patel,anjali.patel18@example.net,6726436628,Ahmedabad,Electronics,3,1649,4947,UPI,2,4
+O-10430,1/19/2026,Manav Banerjee,manav.banerjee89@example.org,7173675127,Kolkata,Home & Kitchen,1,1849,1849,Cash on Delivery,6,5
+O-10431,4/10/2026,Nikhil Kulkarni,nikhil.kulkarni91@example.org,0,Chennai,Electronics,1,1249,1249,Credit Card,3,4
+O-10432,8/31/2026,Joseph Fernandes,joseph.fernandes16@example.net,8683504061,Gurugram,Sports,1,1349,1349,Credit Card,2,5
+O-10433,4/18/2026,Sneha Rao,sneha.rao55@example.com,9011774465,Mumbai,Home & Kitchen,1,2699,2699,Net Banking,3,4
+O-10434,5/7/2026,Sai Das,sai.das23@example.com,8987198890,Delhi,Books,2,699,1398,Debit Card,4,0
+O-10435,5/27/2026,Anjali Patil,anjali.patil29@example.org,8704247613,Bengaluru,Sports,1,2099,2099,UPI,3,4
+O-10436,9/16/2026,Nikhil Singh,nikhil.singh48@example.com,9167650526,Bengaluru,Electronics,3,1749,5247,Debit Card,4,1
+O-10437,10/2/2026,Tanvi Pillai,tanvi.pillai48@example.com,9675347897,Mumbai,Books,2,649,1298,UPI,2,4
+O-10438,3/22/2026,Ishaan Kulkarni,ishaan.kulkarni65@example.org,6399869879,Hyderabad,Fashion,2,1999,3998,Debit Card,5,3
+O-10439,9/12/2026,Sai Pillai,sai.pillai54@example.com,8932796030,,Sports,2,2649,5298,Cash on Delivery,2,5
+O-10440,9/24/2026,Rohan Menon,,7065477123,Hyderabad,Books,1,699,699,UPI,3,2
+O-10441,10/14/2026,Kavya Chatterjee,kavya.chatterjee83@example.org,7710512983,Ahmedabad,Electronics,1,3049,3049,COD,3,
+O-10442,1/19/2026,Harpreet Rao,harpreet.rao79@example.com,8790817362,Mumbai,Electronics,2,4449,8898,Cash on Delivery,4,1
+O-10443,7/1/2026,Vivaan Choudhary,vivaan.choudhary28@example.net,6872438546,Jaipur,Beauty,1,499,499,Debit Card,5,4
+O-10444,10/9/2026,Kabir Joshi,kabir.joshi34@example.net,6351619945,Bengaluru,Beauty,2,899,1798,Debit Card,2,5
+O-10445,10/10/2026,Diya Mishra,diya.mishra97@example.org,7271633928,Bengaluru,Books,1,349,,Cash on Delivery,5,4
+O-10446,4/1/2026,Venkat Mishra,venkat.mishra82@example.com,8188447294,Mumbai,Sports,1,1299,1299,Debit Card,4,5
+O-10447,4/15/2026,Sai D'Souza,sai.dsouza38@example.net,7308694329,Pune,Electronics,1,2649,2649,Cash on Delivery,3,5
+O-10448,1/9/2026,Siddharth Nair,siddharth.nair41@example.org,8893549146,Kolkata,Sports,1,1499,1499,Credit Card,3,5
+O-10449,9/30/2026,Fatima Deshpande,fatima.deshpande63@example.com,7409839439,Bengaluru,Electronics,3,4349,13047,upi,2,5
+O-10450,10/4/2026,Anjali Sandhu,anjali.sandhu87@example.org,8326270586,Ahmedabad,Fashion,1,1949,1949,Cash on Delivery,2,5
+O-10492,6/8/2026,anjali patel,anjali.patel18@example.net,6726436628,Ahmedabad,Electronics,2,2299,4598,Credit Card,3,2
+O-10451,1/9/2026,Neha Sandhu,neha.sandhu10@example.net,9316489198,Kolkata,Sports,1,849,849,UPI,5,5
+O-10452,9/27/2026,Varun Ansari,varun.ansari10@example.net,-8442014522,Kolkata,electronics,1,2149,2149,Cash on Delivery,7,
+O-10453,2/17/2026,Aadhya Reddy,aadhya.reddy93@example.org,6258220180,Jaipur,Electronics,1,699,699,Credit Card,4,5
+O-10454,10/8/2026,Nikhil Mehta,nikhil.mehta39@example.com,7591838149,Gurugram,Fashion,2,1599,3198,UPI,1,
+O-10455,10/1/2026,Diya Mishra,diya.mishra97@example.org,7271633928,Bengaluru,Fashion,2,2899,5798,Cash on Delivery,6,5
+O-10456,6/4/2026,Kabir Bose,kabir.bose4@example.org,7410804057,Pune,Fashion,1,1949,1949,UPI,6,4
+O-10457,3/16/2026,Zoya Verma,zoya.verma66@example.net,-6644131985,Bengaluru,Electronics,1,4399,4399,Credit Card,2,5
+O-10458,1/5/2026,Gurpreet Bose,gurpreet.bose94@example.org,8813421723,Pune,Sports,2,2349,4698,Debit Card,3,4
+O-10459,7/10/2026,Krishna Ansari,krishna.ansari30@example.com,6119602780,Pune,Electronics,1,3249,3249,Net Banking,6,3
+O-10460,2/26/2026,Sai Patel,sai.patel64@example.net,8325688557,Bengaluru,Home & Kitchen,1,2149,2149,UPI,6,
+O-10461,10/5/2026,Nikhil Singh,nikhil.singh48@example.com,9167650526,Bengaluru,Beauty,3,749,2247,Debit Card,3,4
+O-10462,3/26/2026,Vivaan Pillai,vivaan.pillai96@example.net,9496224590,Mumbai,Beauty,1,399,399,Debit Card,2,4
+O-10463,1/10/2026,Manav Iyer,,8468278255,Delhi,Electronics,1,1199,1199,Cash on Delivery,4,3
+O-10464,9/5/2026,Kabir Deshpande,kabir.deshpande65@example.com,7436318476,Kolkata,Sports,2,2349,4698,Credit Card,3,5
+O-10465,9/12/2026,Saanvi Bose,saanvi.bose72@example.org,9501332796,Hyderabad,Beauty,2,949,1898,Cash on Delivery,2,
+O-10466,10/8/2026,Riya Choudhary,riya.choudhary45@example.com,6621446134,Ahmedabad,Electronics,1,2249,2249,Cash on Delivery,2,2
+O-10467,5/14/2026,dhruv iyer,dhruv.iyer49@example.org,7109511790,Pune,Books,1,499,499,Debit Card,7,4
+O-10468,9/3/2026,Aditya Verma,aditya.verma91@example.net,6156464403,Delhi,Home & Kitchen,2,1049,2098,Debit Card,4,5
+O-10469,5/21/2026,Dhruv Iyer,dhruv.iyer49@example.org,7109511790,Pune,Electronics,1,1399,1399,UPI,5,2
+O-10470,4/5/2026,Rohan Mehta,rohan.mehta93@example.com,7238637877,Bengaluru,Home & Kitchen,1,949,949,Cash on Delivery,7,5
+O-10471,9/13/2026,Nikhil Singh,nikhil.singh48@example.com,9167650526,Bengaluru,Home & Kitchen,1,1099,1099,UPI,4,4
+O-10472,5/29/2026,Pranav Mishra,pranav.mishra46@example.com,9818812064,Mumbai,Books,1,349,349,UPI,2,
+O-10473,7/26/2026,Kabir Sandhu,kabir.sandhu72@example.com,8478504210,Ahmedabad,Sports,3,1449,4347,Cash on Delivery,4,5
+O-10474,8/3/2026,Gurpreet Joshi,gurpreet.joshi11@example.org,9898210460,Delhi,Fashion,1,2149,2149,Cash on Delivery,5,5
+O-10475,6/28/2026,Aditya Pillai,aditya.pillai91@example.org,6780578037,Mumbai,Home & Kitchen,2,999,1998,cash on delivery,2,4
+O-10476,4/30/2026,Manav Banerjee,manav.banerjee89@example.org,7173675127,Kolkata,Home & Kitchen,1,2049,2049,Debit Card,3,4
+O-10477,9/13/2026,Neha Fernandes,neha.fernandes75@example.net,9505654705,Bengaluru,Sports,1,1499,1499,Net Banking,3,4
+O-10478,1/16/2026,Aadhya Choudhary,aadhya.choudhary84@example.org,7071013627,Mumbai,Electronics,1,1599,1599,Debit Card,4,4
+O-10479,1/19/2026,Arif Gill,arif.gill79@example.net,6252016128,Jaipur,Home and Kitchen,1,1049,1049,UPI,3,4
+O-10480,8/29/2026,Aryan Nair,aryan.nair76@example.org,7695793186,MUMBAI,Books,2,599,1198,UPI,5,5
+O-10481,6/22/2026,Nikhil Khan,nikhil.khan98@example.org,9953432746,Jaipur,Fashion,1,1449,1449,Net Banking,3,4
+O-10482,9/25/2026,Gurpreet Jain,gurpreet.jain47@example.net,9169871689,Jaipur,Electronics,1,1199,1199,UPI,4,3
+O-10483,3/27/2026,Pooja Jain,pooja.jain7@example.com,7282228498,Mumbai,Electronics,2,2699,5398,Debit Card,3,
+O-10484,2/2/2026,Manav Banerjee,manav.banerjee33@example.net,8370500620,Gurugram,Electronics,3,1549,4647,UPI,7,3
+O-10485,6/20/2026,Priya Sharma,,8178013325,Jaipur,Electronics,1,2199,2199,Debit Card,3,5
+O-10486,9/15/2026,Arif Reddy,arif.reddy99@example.org,7853959893,Kochi,Fashion,3,1149,3447,Net Banking,2,
+O-10487,6/5/2026,Neha Sandhu,neha.sandhu10@example.net,9316489198,Kolkata,Sports,2,799,799,UPI,4,4
+O-10488,7/21/2026,Dhruv Agarwal,dhruv.agarwal35@example.net,9164252477,Gurgaon,Electronics,1,2249,2249,Credit Card,1,5
+O-10489,8/11/2026,Ishita Rao,ishita.rao79@example.com,7271745143,Bengaluru,Electronics,1,1999,1999,Cash on Delivery,7,1
+O-10490,9/6/2026,Arif Ansari,arif.ansari70@example.com,6543161030,-,Beauty,1,499,499,Debit Card,3,4
