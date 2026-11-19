@@ -86,7 +86,7 @@ export default function Navbar({
           </div>
           <div className="hidden text-left sm:block">
             <div className="text-xs font-semibold text-slate-800 dark:text-slate-200">DataGuard Pro</div>
-            <div className="text-[10px] text-slate-400 dark:text-slate-500">Hackathon Edition</div>
+            <div className="text-[10px] text-slate-400 dark:text-slate-500">Enterprise Edition</div>
           </div>
         </div>
       </div>

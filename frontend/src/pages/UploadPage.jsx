@@ -18,8 +18,7 @@ export default function UploadPage({
   onUploadSuccess, 
   onRunAnalysis, 
   analyzing, 
-  activeDataset,
-  onLoadSample 
+  activeDataset
 }) {
   const [dragActive, setDragActive] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -78,31 +77,6 @@ export default function UploadPage({
         <p className="text-xs text-slate-500 mt-1">
           Upload any CSV dataset up to 10,000+ records. DataGuard AI will validate format, inspect columns, and prepare automated profiling.
         </p>
-      </div>
-
-      {/* One-Click Hackathon Sample Ingestion Banner */}
-      <div className="rounded-2xl border border-amber-200 bg-amber-50/60 p-5 dark:border-amber-900/60 dark:bg-amber-950/20 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div className="flex items-start gap-3">
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-500 text-white shadow-sm">
-            <Zap className="h-5 w-5" />
-          </div>
-          <div>
-            <div className="text-sm font-bold text-slate-900 dark:text-white">
-              Official Hackathon Practice Dataset Ready
-            </div>
-            <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">
-              Instant one-click access to <code className="bg-amber-100 dark:bg-amber-900/40 px-1 py-0.5 rounded font-mono text-[11px]">online_store_orders.csv</code> (500 orders with 24 planted data quality anomaly groups).
-            </p>
-          </div>
-        </div>
-        <button
-          onClick={onLoadSample}
-          disabled={uploading || analyzing}
-          className="inline-flex items-center gap-2 rounded-xl bg-amber-500 px-4 py-2 text-xs font-bold text-white shadow-sm hover:bg-amber-400 transition-all shrink-0 disabled:opacity-50"
-        >
-          <Zap className="h-4 w-4" />
-          <span>Load Hackathon Dataset</span>
-        </button>
       </div>
 
       {/* Drag & Drop Area */}

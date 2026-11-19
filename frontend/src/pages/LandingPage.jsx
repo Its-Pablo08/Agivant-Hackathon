@@ -17,7 +17,7 @@ import {
   Award
 } from 'lucide-react';
 
-export default function LandingPage({ onStartAnalysis, onLoadSample }) {
+export default function LandingPage({ onStartAnalysis }) {
   const features = [
     {
       icon: BarChart3,
@@ -89,16 +89,10 @@ export default function LandingPage({ onStartAnalysis, onLoadSample }) {
           </div>
           <div className="flex items-center gap-4">
             <button
-              onClick={onLoadSample}
-              className="text-xs font-semibold text-brand-600 hover:text-brand-700 dark:text-brand-400 dark:hover:text-brand-300 transition-colors"
-            >
-              Demo Hackathon Dataset
-            </button>
-            <button
               onClick={onStartAnalysis}
               className="inline-flex items-center gap-2 rounded-xl bg-brand-600 px-4 py-2 text-xs font-bold text-white shadow-md shadow-brand-500/25 hover:bg-brand-500 transition-all active:scale-95"
             >
-              <span>Launch Dashboard</span>
+              <span>Upload Dataset</span>
               <ArrowRight className="h-3.5 w-3.5" />
             </button>
           </div>
@@ -134,13 +128,12 @@ export default function LandingPage({ onStartAnalysis, onLoadSample }) {
               <span>Analyze Your Dataset</span>
               <ArrowRight className="h-4 w-4" />
             </button>
-            <button
-              onClick={onLoadSample}
+            <a
+              href="#features"
               className="inline-flex items-center gap-2 rounded-xl border border-slate-300 bg-white px-6 py-3.5 text-sm font-semibold text-slate-700 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 transition-all shadow-sm"
             >
-              <Zap className="h-4 w-4 text-amber-500" />
-              <span>Load Hackathon Orders (500 Rows)</span>
-            </button>
+              <span>Explore Features</span>
+            </a>
           </div>
 
           {/* Quick Metrics Bar */}

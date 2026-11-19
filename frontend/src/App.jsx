@@ -57,23 +57,12 @@ export default function App() {
       const gStatus = await dataGuardAPI.getSettingsStatus();
       setGeminiStatus(gStatus);
 
-      // If datasets exist, select the first analyzed one or load sample
+      // If datasets exist, select the first analyzed one
       if (dsets.length > 0) {
         const primary = dsets[0];
         setActiveDataset(primary);
         if (primary.analysis_status === 'analyzed') {
           loadDatasetAnalysis(primary.id);
-        }
-      } else {
-        // Auto-seed hackathon sample for instant demo ready state
-        try {
-          const sample = await dataGuardAPI.loadSampleDataset();
-          setActiveDataset(sample);
-          await runAnalysis(sample.dataset_id);
-          const updatedDsets = await dataGuardAPI.getDatasets();
-          setDatasets(updatedDsets);
-        } catch (e) {
-          console.log('Sample pre-load skipped:', e);
         }
       }
     } catch (err) {
@@ -193,8 +182,7 @@ export default function App() {
       {currentTab === 'landing' ? (
         <div className="w-full h-full overflow-y-auto">
           <LandingPage
-            onStartAnalysis={() => setCurrentTab('overview')}
-            onLoadSample={handleLoadSample}
+            onStartAnalysis={() => setCurrentTab('upload')}
           />
         </div>
       ) : (
@@ -228,7 +216,6 @@ export default function App() {
                   scoreData={scoreData}
                   onSelectDataset={handleSelectDataset}
                   onNavigate={setCurrentTab}
-                  onLoadSample={handleLoadSample}
                   onRunAnalysis={runAnalysis}
                   analyzing={analyzing}
                 />
@@ -240,7 +227,6 @@ export default function App() {
                   onRunAnalysis={runAnalysis}
                   analyzing={analyzing}
                   activeDataset={activeDataset}
-                  onLoadSample={handleLoadSample}
                 />
               )}
 

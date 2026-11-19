@@ -51,7 +51,6 @@ export default function OverviewPage({
   scoreData,
   onSelectDataset,
   onNavigate, 
-  onLoadSample,
   onRunAnalysis,
   analyzing
 }) {
@@ -150,17 +149,10 @@ export default function OverviewPage({
         </div>
         <div className="flex flex-wrap items-center gap-3">
           <button
-            onClick={onLoadSample}
-            className="inline-flex items-center gap-2 rounded-xl bg-white/10 px-4 py-2.5 text-xs font-bold text-white backdrop-blur hover:bg-white/20 transition-all border border-white/10 shadow-sm"
-          >
-            <Zap className="h-4 w-4 text-amber-300" />
-            <span>Load 500 Orders Sample</span>
-          </button>
-          <button
             onClick={() => onNavigate('upload')}
             className="inline-flex items-center gap-2 rounded-xl bg-brand-500 px-4 py-2.5 text-xs font-bold text-white shadow-md shadow-brand-500/30 hover:bg-brand-400 transition-all"
           >
-            <span>Upload New CSV</span>
+            <span>Upload Dataset</span>
             <ArrowRight className="h-4 w-4" />
           </button>
         </div>
@@ -508,7 +500,7 @@ export default function OverviewPage({
               ) : (
                 <tr>
                   <td colSpan={7} className="py-8 text-center text-slate-400">
-                    No scans in history yet. Upload or load sample dataset above.
+                    No scans in history yet. Upload a dataset to begin.
                   </td>
                 </tr>
               )}
