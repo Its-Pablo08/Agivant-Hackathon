@@ -12,13 +12,19 @@ import {
   ChevronUp
 } from 'lucide-react';
 
-export default function IssuesExplorerPage({ issues = [], activeDataset }) {
+export default function IssuesExplorerPage({ issues = [], activeDataset, initialCategory = 'all', initialSeverity = 'all' }) {
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('all');
-  const [selectedSeverity, setSelectedSeverity] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState(initialCategory || 'all');
+  const [selectedSeverity, setSelectedSeverity] = useState(initialSeverity || 'all');
   const [sortBy, setSortBy] = useState('count_desc');
   const [expandedId, setExpandedId] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
+  const [copiedRowsId, setCopiedRowsId] = useState(null);
+
+  React.useEffect(() => {
+    if (initialCategory) setSelectedCategory(initialCategory);
+    if (initialSeverity) setSelectedSeverity(initialSeverity);
+  }, [initialCategory, initialSeverity]);
 
   // Filter issues
   const filtered = issues.filter((iss) => {
@@ -175,7 +181,60 @@ export default function IssuesExplorerPage({ issues = [], activeDataset }) {
                       {/* Expandable row details */}
                       {isExp && (
                         <tr className="bg-slate-50/80 dark:bg-slate-800/40">
-                          <td colSpan={6} className="p-4 space-y-3">
+                          <td colSpan={6} className="p-4 space-y-4">
+                            {/* Affected Row Numbers Section */}
+                            {issue.affected_rows && issue.affected_rows.length > 0 && (
+                              <div className="rounded-xl border border-slate-200 bg-white p-3.5 dark:border-slate-700 dark:bg-slate-900">
+                                <div className="flex items-center justify-between mb-2">
+                                  <div className="flex items-center gap-2">
+                                    <span className="text-[11px] font-bold text-slate-800 dark:text-slate-200">
+                                      Affected Excel Row Numbers ({issue.issue_count} rows total):
+                                    </span>
+                                  </div>
+                                  <button
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      navigator.clipboard.writeText(issue.affected_rows.join(', '));
+                                      setCopiedRowsId(issue.id);
+                                      setTimeout(() => setCopiedRowsId(null), 2000);
+                                    }}
+                                    className="text-[10px] font-semibold text-brand-600 hover:text-brand-700 dark:text-brand-400"
+                                  >
+                                    {copiedRowsId === issue.id ? 'Copied Rows!' : 'Copy Row Numbers'}
+                                  </button>
+                                </div>
+                                <div className="flex flex-wrap gap-1.5 max-h-32 overflow-y-auto p-1">
+                                  {issue.affected_rows.map((rowNum, rIdx) => (
+                                    <span
+                                      key={rIdx}
+                                      className="inline-flex items-center rounded-md bg-slate-100 px-2 py-0.5 font-mono text-[11px] font-semibold text-slate-700 dark:bg-slate-800 dark:text-slate-300 border border-slate-200/80 dark:border-slate-700"
+                                    >
+                                      Row #{rowNum}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+
+                            {/* Sample Anomalies vs Recommended Values */}
+                            {issue.original_values && issue.original_values.length > 0 && (
+                              <div className="rounded-xl border border-amber-200 bg-amber-50/50 p-3.5 dark:border-amber-900/40 dark:bg-amber-950/20">
+                                <span className="text-[11px] font-bold text-amber-900 dark:text-amber-300 block mb-1.5">
+                                  Sample Detected Problematic Values:
+                                </span>
+                                <div className="flex flex-wrap gap-2">
+                                  {issue.original_values.map((val, vIdx) => (
+                                    <span
+                                      key={vIdx}
+                                      className="rounded bg-white/80 px-2 py-1 text-xs font-mono text-amber-900 border border-amber-200 dark:bg-slate-900 dark:text-amber-300 dark:border-amber-800"
+                                    >
+                                      {String(val)}
+                                    </span>
+                                  ))}
+                                </div>
+                              </div>
+                            )}
+
                             <div className="grid md:grid-cols-2 gap-3 text-xs">
                               <div>
                                 <span className="font-bold text-slate-700 dark:text-slate-300 uppercase text-[10px] block mb-1">

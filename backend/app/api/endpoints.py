@@ -318,7 +318,7 @@ def clean_dataset(dataset_id: str, req: CleanRequest):
         "cleaned_rows": cleaned_df.shape[0],
         "applied_operations": req.approved_operations,
         "download_url": f"/api/export/cleaned/{dataset_id}",
-        "preview": cleaned_df.head(5).fillna("").to_dict(orient="records")
+        "preview": cleaned_df.head(5).astype(object).fillna("").to_dict(orient="records")
     }
 
 @router.get("/report/{dataset_id}")

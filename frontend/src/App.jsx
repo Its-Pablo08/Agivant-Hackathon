@@ -21,6 +21,10 @@ export default function App() {
   const [datasets, setDatasets] = useState([]);
   const [activeDataset, setActiveDataset] = useState(null);
   
+  // Drilldown filters for Issues Explorer
+  const [issuesCategoryFilter, setIssuesCategoryFilter] = useState('all');
+  const [issuesSeverityFilter, setIssuesSeverityFilter] = useState('all');
+  
   // Scanned state
   const [analyzing, setAnalyzing] = useState(false);
   const [analysisResult, setAnalysisResult] = useState(null);
@@ -104,6 +108,17 @@ export default function App() {
       setActiveDataset(found);
       loadDatasetAnalysis(found.id);
     }
+  };
+
+  const handleDrilldown = (filterType, filterValue) => {
+    if (filterType === 'category') {
+      setIssuesCategoryFilter(filterValue);
+      setIssuesSeverityFilter('all');
+    } else if (filterType === 'severity') {
+      setIssuesSeverityFilter(filterValue);
+      setIssuesCategoryFilter('all');
+    }
+    setCurrentTab('issues');
   };
 
   const handleUploadSuccess = (uploadData) => {
@@ -218,6 +233,7 @@ export default function App() {
                   onNavigate={setCurrentTab}
                   onRunAnalysis={runAnalysis}
                   analyzing={analyzing}
+                  onDrilldown={handleDrilldown}
                 />
               )}
 
@@ -248,6 +264,8 @@ export default function App() {
                 <IssuesExplorerPage
                   issues={issues}
                   activeDataset={activeDataset}
+                  initialCategory={issuesCategoryFilter}
+                  initialSeverity={issuesSeverityFilter}
                 />
               )}
 
