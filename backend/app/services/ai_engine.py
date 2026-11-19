@@ -9,12 +9,51 @@ logger = logging.getLogger(__name__)
 CANDIDATE_MODELS = [
     "gemini-2.0-flash",
     "gemini-2.5-flash",
+    "gemini-2.0-flash-lite",
     "gemini-1.5-flash-latest",
-    "gemini-1.5-flash-8b",
     "gemini-1.5-flash",
+    "gemini-1.5-flash-8b",
     "gemini-1.5-pro",
     "gemini-pro"
 ]
+
+def get_available_gemini_models_for_key(api_key: str) -> List[str]:
+    """
+    Queries Google AI API to list models genuinely supported and accessible by this key.
+    """
+    clean_key = api_key.strip()
+    available = []
+    
+    # 1. Try modern google.genai
+    try:
+        from google import genai
+        client = genai.Client(api_key=clean_key)
+        for m in client.models.list():
+            name = getattr(m, "name", "") or ""
+            name = name.replace("models/", "").strip()
+            if "gemini" in name.lower() and name not in available:
+                available.append(name)
+        if available:
+            return available
+    except Exception as e:
+        logger.debug(f"google.genai models.list check failed: {e}")
+
+    # 2. Try legacy google.generativeai
+    try:
+        import google.generativeai as legacy_genai
+        legacy_genai.configure(api_key=clean_key)
+        for m in legacy_genai.list_models():
+            methods = getattr(m, "supported_generation_methods", []) or []
+            if "generateContent" in methods:
+                name = getattr(m, "name", "").replace("models/", "").strip()
+                if name and name not in available:
+                    available.append(name)
+        if available:
+            return available
+    except Exception as e:
+        logger.debug(f"legacy google.generativeai list_models check failed: {e}")
+
+    return CANDIDATE_MODELS
 
 def generate_fallback_ai_explanations(
     columns_profile: List[Dict[str, Any]],
@@ -108,19 +147,26 @@ def generate_fallback_ai_explanations(
         "prioritized_actions": prioritized_actions
     }
 
-def call_gemini_api(api_key: str, preferred_model: str, prompt: str) -> tuple[str, str]:
+def call_gemini_api(api_key: str, preferred_model: str, prompt: str, model_candidates: Optional[List[str]] = None) -> tuple[str, str]:
     """
     Attempts to call Google Gemini using the new google.genai SDK or legacy google.generativeai,
     trying candidate models in priority order if the preferred model is not found (404).
     Returns (response_text, actual_model_used).
     """
-    models_to_try = [preferred_model] + [m for m in CANDIDATE_MODELS if m != preferred_model]
+    clean_key = api_key.strip()
+    norm_pref = preferred_model.replace("models/", "").strip()
+    
+    if model_candidates:
+        models_to_try = [norm_pref] + [m for m in model_candidates if m != norm_pref]
+    else:
+        models_to_try = [norm_pref] + [m for m in CANDIDATE_MODELS if m != norm_pref]
+
     last_error = None
 
     # 1. Try with new official google.genai SDK
     try:
         from google import genai
-        client = genai.Client(api_key=api_key.strip())
+        client = genai.Client(api_key=clean_key)
         for model_name in models_to_try:
             try:
                 response = client.models.generate_content(
@@ -131,14 +177,14 @@ def call_gemini_api(api_key: str, preferred_model: str, prompt: str) -> tuple[st
                     return response.text, model_name
             except Exception as err:
                 last_error = err
-                logger.warning(f"google.genai call to '{model_name}' failed: {err}")
+                logger.info(f"google.genai call to '{model_name}' failed: {err}")
     except ImportError:
         pass
 
     # 2. Try with google.generativeai SDK
     try:
         import google.generativeai as legacy_genai
-        legacy_genai.configure(api_key=api_key.strip())
+        legacy_genai.configure(api_key=clean_key)
         for model_name in models_to_try:
             try:
                 model = legacy_genai.GenerativeModel(model_name)
@@ -147,7 +193,7 @@ def call_gemini_api(api_key: str, preferred_model: str, prompt: str) -> tuple[st
                     return response.text, model_name
             except Exception as err:
                 last_error = err
-                logger.warning(f"legacy google.generativeai call to '{model_name}' failed: {err}")
+                logger.info(f"legacy google.generativeai call to '{model_name}' failed: {err}")
     except ImportError:
         pass
 
@@ -158,7 +204,23 @@ def verify_gemini_connection(api_key: str, preferred_model: str = "gemini-2.0-fl
     Verifies that the provided API key works with Google Gemini, finding a supported model.
     """
     try:
-        text, working_model = call_gemini_api(api_key, preferred_model, "Reply with 'OK' only.")
+        pref = preferred_model.replace("models/", "").strip() if preferred_model else "gemini-2.0-flash"
+        accessible = get_available_gemini_models_for_key(api_key)
+        
+        candidates = []
+        if pref in accessible:
+            candidates.append(pref)
+        for cand in ["gemini-2.0-flash", "gemini-2.5-flash", "gemini-2.0-flash-lite", "gemini-1.5-flash-latest", "gemini-1.5-flash", "gemini-pro"]:
+            if cand in accessible and cand not in candidates:
+                candidates.append(cand)
+        for m in accessible:
+            if m not in candidates:
+                candidates.append(m)
+        if not candidates:
+            candidates = [pref] + [m for m in CANDIDATE_MODELS if m != pref]
+            
+        target_model = candidates[0]
+        text, working_model = call_gemini_api(api_key, target_model, "Reply with 'OK' only.", model_candidates=candidates)
         return {
             "status": "success",
             "working_model": working_model,
@@ -168,7 +230,7 @@ def verify_gemini_connection(api_key: str, preferred_model: str = "gemini-2.0-fl
         return {
             "status": "warning",
             "working_model": preferred_model,
-            "message": f"Test call returned: {str(e)}. Fallback engine will be active."
+            "message": f"Test call returned: {str(e)}. Fallback engine will be active if needed."
         }
 
 def generate_ai_insights(
